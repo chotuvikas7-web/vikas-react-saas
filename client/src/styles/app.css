@@ -1,0 +1,223 @@
+#root {
+  min-height: 100vh;
+}
+
+.login-page {
+  align-items: center;
+  background: var(--surface);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .18);
+  color: var(--ink);
+  display: grid;
+  gap: .85rem;
+  max-width: 430px;
+  padding: 2rem;
+  width: 100%;
+}
+
+.logo-mark {
+  align-items: center;
+  background: var(--primary);
+  border-radius: 10px;
+  color: var(--primary-text, #fff);
+  display: inline-flex;
+  font-weight: 900;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.modal-backdrop.show {
+  background: rgba(16, 24, 40, .58);
+  z-index: 1050;
+}
+
+.admin-form-modal,
+.super-form-modal {
+  z-index: 1060;
+}
+
+.admin-form-modal .modal-dialog,
+.super-form-modal .modal-dialog {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: min(1180px, calc(100vw - 2rem));
+}
+
+.admin-form-modal .modal-content,
+.super-form-modal .modal-content {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .28);
+  color: var(--ink, #111827);
+  overflow: hidden;
+}
+
+.admin-form-modal .modal-header,
+.super-form-modal .modal-header,
+.admin-form-modal .modal-footer,
+.super-form-modal .modal-footer {
+  background: #fff;
+}
+
+.admin-form-modal .modal-body,
+.super-form-modal .modal-body {
+  background: #fff;
+}
+
+.super-form-modal-kicker {
+  color: #8a95a6;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.action-cell {
+  display: flex;
+  gap: .45rem;
+  justify-content: flex-end;
+}
+
+.catalog-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.place-items-center {
+  place-items: center;
+}
+
+.admin-chart-placeholder {
+  display: grid;
+  gap: .75rem;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  min-height: 118px;
+}
+
+.admin-chart-placeholder span,
+.admin-profit-list span {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: grid;
+  gap: .4rem;
+  padding: .75rem;
+}
+
+.admin-chart-placeholder em {
+  color: #2563eb;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.admin-profit-list {
+  display: grid;
+  gap: .75rem;
+}
+
+.admin-dashboard-chart {
+  display: block;
+}
+
+.admin-chart-frame {
+  height: 260px;
+  min-height: 220px;
+  position: relative;
+}
+
+.admin-chart-frame-doughnut {
+  margin: 0 auto;
+  max-width: 380px;
+}
+
+.admin-nav button,
+.super-nav button {
+  text-align: left;
+}
+
+@media (max-width: 767px) {
+  .action-cell {
+    justify-content: flex-start;
+  }
+
+  .admin-chart-frame {
+    height: 240px;
+  }
+}
+
+.sidebar-scrim {
+  background: rgba(15, 23, 42, .52);
+  border: 0;
+  inset: 0;
+  position: fixed;
+  z-index: 1030;
+}
+
+.admin-sidebar,
+.super-sidebar {
+  transition: transform .2s ease, width .2s ease;
+}
+
+.admin-nav-children.collapse,
+.super-nav-group .collapse {
+  display: none;
+}
+
+.admin-nav-children.collapse.show,
+.super-nav-group .collapse.show {
+  display: block;
+}
+
+.admin-nav-toggle:not(.collapsed) .admin-nav-arrow,
+.super-nav-toggle:not(.collapsed) > .bi-chevron-down {
+  transform: rotate(180deg);
+}
+
+.admin-shell.is-sidebar-collapsed .admin-sidebar,
+.super-admin-shell.is-sidebar-collapsed .super-sidebar {
+  width: 76px;
+}
+
+.admin-shell.is-sidebar-collapsed .admin-sidebar :is(.admin-brand span, .admin-nav-link span, .admin-nav-child span),
+.super-admin-shell.is-sidebar-collapsed .super-sidebar :is(.super-brand div, .super-nav-link span, .super-nav-child span),
+.admin-shell.is-sidebar-collapsed .admin-nav-arrow,
+.super-admin-shell.is-sidebar-collapsed .super-nav-toggle > .bi-chevron-down {
+  display: none;
+}
+
+@media (max-width: 575px) {
+  .catalog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 991px) {
+  .admin-sidebar,
+  .super-sidebar {
+    bottom: 0;
+    left: 0;
+    max-width: min(100vw, 400px);
+    position: fixed;
+    top: 0;
+    transform: translateX(-105%);
+    width: min(100vw, 400px);
+    z-index: 1040;
+  }
+
+  .admin-sidebar.is-mobile-open,
+  .super-sidebar.is-mobile-open {
+    transform: translateX(0);
+  }
+}

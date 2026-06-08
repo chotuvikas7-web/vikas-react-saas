@@ -1,0 +1,24 @@
+{
+  "name": "vikas-electronics-client",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "chart.js": "^4.5.1",
+    "lucide-react": "^0.469.0",
+    "react": "^19.0.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.1.1",
+    "vite": "^6.0.7"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}
