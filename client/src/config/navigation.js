@@ -3,7 +3,7 @@ const slug = (label) => label.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0
 export const adminModules = [
   { group: 'Dashboard', items: [{ label: 'Dashboard', path: '/admin' }] },
   { group: 'Email', items: [{ label: 'Inbox', path: '/admin/email' }] },
-  { group: 'Masters', items: ['Clients', 'Suppliers', 'Categories', 'Products', 'Units', 'Brands', 'GST Rates', 'Ledger Master'].map((label) => ({ label, path: `/admin/${slug(label)}` })) },
+  { group: 'Masters', items: ['Clients', 'Suppliers', 'Categories', 'Products', 'Units', 'Brands', 'GST Rates'].map((label) => ({ label, path: `/admin/${slug(label)}` })).concat([{ label: 'Ledger', path: '/admin/ledger-master' }]) },
   { group: 'CRM', items: ['Leads', 'Enquiries', 'Follow Ups', 'Customer Activities', 'Client Communication', 'Quotations'].map((label) => ({ label, path: `/admin/${slug(label)}` })) },
   { group: 'Inventory', items: ['Stock', 'Purchases', 'Sales', 'Orders', 'Purchase Return', 'Sales Return', 'Stock Transfer', 'Low Stock Alerts'].map((label) => ({ label, path: `/admin/${slug(label)}` })) },
   { group: 'Manufacturing', items: ['Raw Materials', 'BOM', 'Production Orders', 'Work Orders', 'Finished Goods', 'Damage/Wastage', 'Production Reports'].map((label) => ({ label, path: `/admin/${slug(label)}` })) },
