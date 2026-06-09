@@ -124,18 +124,6 @@ const companyStatuses = ['active', 'trial', 'suspended', 'inactive'];
 const companyStatusCount = (rows, status) => rows.filter((row) => companyStatus(row.status) === status).length;
 const companyPlanLabel = (value, name) => name || companyPlans.find((plan) => String(plan.value) === String(value))?.label || titleize(String(value || 'Basic'));
 const companyDate = (value) => (value ? new Date(value).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-');
-const companyCurrency = (value) => Number(value || 0).toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 });
-const companyDaysUntil = (value) => {
-  if (!value) return null;
-  const days = Math.ceil((new Date(value).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
-  return days > 0 ? days : null;
-};
-const activityTone = (status) => {
-  const label = String(status || '').toLowerCase();
-  if (label.includes('info')) return 'info';
-  if (label.includes('invoice')) return 'invoice';
-  return 'success';
-};
 const companyStorage = (value) => `${(Number(value || 0) / 1024).toFixed(2)} GB`;
 const metaFrom = (row) => {
   if (!row?.metadata) return {};
@@ -587,250 +575,117 @@ function CompanyDetailsExactScreen({ rows, load }) {
     return <section className="company-details-page"><div className="company-info-panel"><h2>No company found</h2><p className="mb-0 text-muted">No tenant company details are available.</p></div></section>;
   }
 
-  const billingDate = selectedCompany.subscription_ends_at || selectedCompany.due_date;
-  const billingDays = companyDaysUntil(billingDate);
-  const renewalDate = selectedCompany.renewal_at || selectedCompany.subscription_ends_at;
-  const revenue = selectedCompany.total_revenue || 245320;
-  const activityRows = [
-    ['Plan upgraded to Enterprise', 'Admin User', '07 May 2024, 10:30 AM', 'Success', 'bi-arrow-up-circle'],
-    ['New user added: John Doe', 'Admin User', '06 May 2024, 03:15 PM', 'Info', 'bi-person-plus'],
-    ['Storage limit increased to 100 GB', 'Admin User', '05 May 2024, 11:20 AM', 'Success', 'bi-hdd'],
-    ['Invoice generated for May 2024', 'System', '01 May 2024, 09:00 AM', 'Invoice', 'bi-receipt']
-  ];
-
   return (
     <section className="company-details-page company-details-exact">
       {message ? <div className={`alert alert-${message.type}`}>{message.text}</div> : null}
-
-      <header className="module-page-header company-details-header">
-        <nav className="module-breadcrumb" aria-label="breadcrumb">
-          <span>Tenant Management</span>
-          <i className="bi bi-chevron-right" aria-hidden="true" />
-          <span>All Companies</span>
-          <i className="bi bi-chevron-right" aria-hidden="true" />
-          <strong>Company Details</strong>
-        </nav>
-      </header>
-
+      <div className="company-breadcrumb">Tenant Management <i className="bi bi-chevron-right" /> All Companies <i className="bi bi-chevron-right" /> <strong>Company Details</strong></div>
       <div className="company-profile-overview">
-        <div className="company-profile-top">
-          <div className="company-profile-identity">
-            <span className="company-profile-avatar">{selectedInitials}</span>
-            <div className="company-profile-title">
-              <div className="company-title-line">
-                <h1>{selectedCompany.company_name || selectedCompany.title}</h1>
-                <span className={`company-status-pill is-${currentStatus}`}>{titleize(currentStatus)}</span>
-              </div>
-              <p>
-                {companyPlanLabel(selectedCompany.plan_id, selectedCompany.plan_name)} Plan
-                <span className="company-meta-dot" />
-                Customer ID: CMP-{String(selectedCompany.id).padStart(6, '0')}
-                <span className="company-meta-dot" />
-                Registered on: {companyDate(selectedCompany.created_at)}
-              </p>
-            </div>
+        <div className="company-profile-head">
+          <span className="company-profile-avatar">{selectedInitials}</span>
+          <div className="company-profile-title">
+            <div className="company-title-line"><h2>{selectedCompany.company_name || selectedCompany.title}</h2><span className={`company-status-pill is-${currentStatus}`}>{titleize(currentStatus)}</span></div>
+            <p>{companyPlanLabel(selectedCompany.plan_id, selectedCompany.plan_name)} Plan <b>-</b> Customer ID: CMP-{String(selectedCompany.id).padStart(6, '0')} <b>-</b> Registered on: {companyDate(selectedCompany.created_at)}</p>
           </div>
-
-          <div className="company-profile-stats">
-            {[
-              ['Users', usersCount, 'Total Users', 'bi-people', 'primary'],
-              ['Storage', `${storageUsedGb.toFixed(2)} GB`, `${storagePercent}% Used`, 'bi-archive', 'success'],
-              ['Logins', '1,248', 'Total Logins', 'bi-person-check', 'warning'],
-              ['Revenue', companyCurrency(revenue), 'Total Spent', 'bi-currency-rupee', 'purple']
-            ].map(([label, value, sub, icon, tone]) => (
-              <span key={label} className={`is-${tone}`}>
-                <i className={`bi ${icon}`} />
-                <small>{label}</small>
-                <strong>{value}</strong>
-                <em>{sub}</em>
-              </span>
-            ))}
-          </div>
-
           <div className="company-profile-actions">
             <button className="btn btn-outline-primary btn-sm" type="button"><i className="bi bi-box-arrow-in-right" /> Login as Company</button>
+            <button className="btn btn-primary btn-sm" type="button" onClick={() => setFormRecord(selectedCompany)}><i className="bi bi-pencil" /> Edit Company</button>
             <div className="company-actions">
-              <button className="btn btn-primary btn-sm company-edit-btn" type="button" onClick={() => setFormRecord(selectedCompany)}>
-                <i className="bi bi-pencil" /> Edit Company <i className="bi bi-chevron-down" />
-              </button>
-              <button className="company-row-icon" type="button" aria-label="More actions" onClick={() => setShowActions((value) => !value)}><i className="bi bi-three-dots-vertical" /></button>
-              {showActions ? (
-                <div className="company-action-menu">
-                  <button type="button" onClick={() => { setViewRecord(selectedCompany); setShowActions(false); }}><i className="bi bi-eye" /> View</button>
-                  <button type="button" onClick={() => toggleStatus(selectedCompany)}><i className={`bi ${currentStatus === 'active' ? 'bi-toggle-on' : 'bi-toggle-off'}`} /> {currentStatus === 'active' ? 'Suspend' : 'Activate'}</button>
-                  <button type="button" onClick={() => remove(selectedCompany)}><i className="bi bi-trash3" /> Delete</button>
-                </div>
-              ) : null}
+              <button className="company-row-icon" type="button" onClick={() => setShowActions((value) => !value)}><i className="bi bi-three-dots-vertical" /></button>
+              {showActions ? <div className="company-action-menu"><button type="button" onClick={() => { setViewRecord(selectedCompany); setShowActions(false); }}><i className="bi bi-eye" /> View</button><button type="button" onClick={() => toggleStatus(selectedCompany)}><i className={`bi ${currentStatus === 'active' ? 'bi-toggle-on' : 'bi-toggle-off'}`} /> {currentStatus === 'active' ? 'Suspend' : 'Activate'}</button><button type="button" onClick={() => remove(selectedCompany)}><i className="bi bi-trash3" /> Delete</button></div> : null}
             </div>
           </div>
         </div>
-
+        <div className="company-profile-stats">
+          {[
+            ['Users', usersCount, 'Total Users', 'bi-people', 'primary'],
+            ['Storage', `${storageUsedGb.toFixed(2)} GB`, `${storagePercent}% Used`, 'bi-archive', 'success'],
+            ['Logins', '1,248', 'Total Logins', 'bi-person-check', 'warning'],
+            ['Revenue', 'Rs. 24,320', 'Total Spent', 'bi-shield-check', 'purple']
+          ].map(([label, value, sub, icon, tone]) => <span key={label} className={`is-${tone}`}><i className={`bi ${icon}`} /><small>{label}</small><strong>{value}</strong><em>{sub}</em></span>)}
+        </div>
         <div className="company-tabs">
-          {['Overview', 'Subscription', `Users (${usersCount})`, 'Usage', 'Storage', 'Activity', 'Invoices (18)', 'Settings'].map((tab, index) => (
-            <button className={index === 0 ? 'active' : ''} type="button" key={tab}>{tab}</button>
-          ))}
+          {['Overview', 'Subscription', `Users (${usersCount})`, 'Usage', 'Storage', 'Activity', 'Invoices (18)', 'Settings'].map((tab, index) => <button className={index === 0 ? 'active' : ''} type="button" key={tab}>{tab}</button>)}
         </div>
       </div>
 
       <div className="company-overview-grid">
         <section className="company-info-panel">
-          <div className="company-panel-head"><h2>Company Information</h2></div>
-          <div className="company-info-body">
-            <div className="company-info-list">
-              {[
-                ['Company Name', selectedCompany.company_name || selectedCompany.title],
-                ['Owner Name', selectedCompany.owner_name || selectedCompany.owner],
-                ['Email', selectedCompany.owner_email || selectedCompany.email],
-                ['Phone', selectedCompany.phone || selectedCompany.owner_phone],
-                ['Website', selectedCompany.website || '-'],
-                ['Industry', selectedCompany.industry || 'Information Technology'],
-                ['Country', selectedCompany.country || 'India'],
-                ['State', selectedCompany.state || '-'],
-                ['City', selectedCompany.city || '-'],
-                ['GST Number', selectedCompany.gst_number || '-'],
-                ['PAN Number', selectedCompany.pan_number || '-'],
-                ['Registered On', companyDate(selectedCompany.created_at)]
-              ].map(([label, value]) => <span key={label}><small>{label}</small><strong>{value || '-'}</strong></span>)}
-            </div>
-            <div className="company-info-art" aria-hidden="true"><i className="bi bi-buildings" /></div>
+          <div className="company-panel-head"><div><h2>Company Information</h2></div></div>
+          <div className="company-info-list">
+            {[
+              ['Company Name', selectedCompany.company_name || selectedCompany.title],
+              ['Owner Name', selectedCompany.owner_name || selectedCompany.owner],
+              ['Email', selectedCompany.owner_email || selectedCompany.email],
+              ['Phone', selectedCompany.phone || selectedCompany.owner_phone],
+              ['Website', selectedCompany.website || '-'],
+              ['Industry', selectedCompany.industry || 'Information Technology'],
+              ['Country', selectedCompany.country || 'India'],
+              ['State', selectedCompany.state || '-'],
+              ['City', selectedCompany.city || '-'],
+              ['GST Number', selectedCompany.gst_number || '-'],
+              ['PAN Number', selectedCompany.pan_number || '-'],
+              ['Registered On', companyDate(selectedCompany.created_at)]
+            ].map(([label, value]) => <span key={label}><small>{label}</small><strong>{value || '-'}</strong></span>)}
           </div>
           <button className="btn btn-outline-primary btn-sm company-panel-action" type="button" onClick={() => setViewRecord(selectedCompany)}>View More Details</button>
         </section>
-
         <section className="company-side-panel">
-          <div className="company-panel-head">
-            <h2>Subscription &amp; Plan</h2>
-            <span className="company-plan-pill">{companyPlanLabel(selectedCompany.plan_id, selectedCompany.plan_name)}</span>
-          </div>
-          <div className="company-side-rows">
-            <div className="company-side-row"><span>Plan</span><strong>{companyPlanLabel(selectedCompany.plan_id, selectedCompany.plan_name)}</strong></div>
-            <div className="company-side-row"><span>Billing Cycle</span><strong>Monthly</strong></div>
-            <div className="company-side-row"><span>Amount</span><strong>{companyCurrency(24999)} / month</strong></div>
-            <div className="company-side-row is-billing">
-              <span>Next Billing Date</span>
-              <strong>
-                {companyDate(billingDate)}
-                {billingDays ? <em className="company-billing-note">In {billingDays} days</em> : null}
-              </strong>
-            </div>
-            <div className="company-side-row"><span>Renewal Date</span><strong>{companyDate(renewalDate)}</strong></div>
-            <div className="company-side-row"><span>Payment Method</span><strong>•••• •••• •••• 4242</strong></div>
-          </div>
-          <button className="btn btn-outline-primary btn-sm w-100 company-panel-btn" type="button">Manage Subscription</button>
+          <div className="company-panel-head"><div><h2>Subscription & Plan</h2></div><span className="company-plan-pill">{companyPlanLabel(selectedCompany.plan_id, selectedCompany.plan_name)}</span></div>
+          {[
+            ['Plan', companyPlanLabel(selectedCompany.plan_id, selectedCompany.plan_name)],
+            ['Billing Cycle', 'Monthly'],
+            ['Amount', 'Rs. 24,999 / month'],
+            ['Next Billing Date', companyDate(selectedCompany.subscription_ends_at)],
+            ['Renewal Date', companyDate(selectedCompany.subscription_ends_at)],
+            ['Payment Method', '**** **** **** 4242']
+          ].map(([label, value]) => <div className="company-side-row" key={label}><span>{label}</span><strong>{value}</strong></div>)}
+          <button className="btn btn-outline-primary btn-sm w-100" type="button">Manage Subscription</button>
         </section>
       </div>
 
       <div className="company-overview-grid">
         <section className="company-info-panel">
-          <div className="company-panel-head">
-            <h2>Usage Overview</h2>
-            <button className="btn btn-outline-secondary btn-sm company-date-chip" type="button">01 May 2024 - 07 May 2024 <i className="bi bi-chevron-down" /></button>
-          </div>
+          <div className="company-panel-head"><div><h2>Usage Overview</h2></div><button className="btn btn-outline-secondary btn-sm" type="button">01 May 2024 - 07 May 2024 <i className="bi bi-chevron-down" /></button></div>
           <div className="company-usage-grid">
             {[
-              ['Active Users', '18', '+12.5% vs last week', 'is-up', 'M0 30 L24 26 L48 28 L72 18 L96 22 L120 16 L144 20 L168 12 L180 8'],
-              ['Logins', '342', '+8.3% vs last week', 'is-up', 'M0 26 L24 30 L48 24 L72 28 L96 20 L120 22 L144 18 L168 24 L180 14'],
-              ['Transactions', '1,256', '+15.2% vs last week', 'is-up', 'M0 32 L24 28 L48 30 L72 22 L96 24 L120 18 L144 20 L168 10 L180 6'],
-              ['Invoices', '58', '-4.2% vs last week', 'is-down', 'M0 12 L24 16 L48 14 L72 20 L96 18 L120 24 L144 22 L168 28 L180 32']
-            ].map(([label, value, trend, tone, path]) => (
-              <article className="company-usage-card" key={label}>
-                <small>{label}</small>
-                <strong>{value}</strong>
-                <em className={tone}>{trend}</em>
-                <svg viewBox="0 0 180 36" preserveAspectRatio="none"><path d={path} /></svg>
-              </article>
-            ))}
+              ['Active Users', '18', '12.5% vs last week', 'is-up'],
+              ['Logins', '342', '8.3% vs last week', 'is-up'],
+              ['Transactions', '1,256', '15.2% vs last week', 'is-up'],
+              ['Invoices', '58', '4.2% vs last week', 'is-down']
+            ].map(([label, value, trend, tone]) => <article className="company-usage-card" key={label}><small>{label}</small><strong>{value}</strong><em className={tone}>{trend}</em><svg viewBox="0 0 180 44" preserveAspectRatio="none"><path d="M0 28 L20 24 L38 30 L58 18 L80 22 L102 18 L124 20 L146 14 L180 8" /></svg></article>)}
           </div>
         </section>
-
         <section className="company-side-panel">
-          <div className="company-panel-head">
-            <h2>Storage Usage</h2>
-            <span className="company-status-pill is-active">{storagePercent}% Used</span>
-          </div>
+          <div className="company-panel-head"><div><h2>Storage Usage</h2></div><span className="company-status-pill is-active">{storagePercent}% Used</span></div>
           <div className="company-storage-summary">
-            <div className="company-storage-donut" style={{ '--used': `${storagePercent}%` }}>
-              <strong>{storagePercent}%</strong>
-              <small>{storageUsedGb.toFixed(2)} GB / {storageTotalGb} GB</small>
-            </div>
-            <ul>
-              {[['Documents', '18.45 GB (38%)'], ['Images', '12.10 GB (25%)'], ['Database', '10.25 GB (21%)'], ['Backups', '5.56 GB (11%)'], ['Others', '2.00 GB (5%)']].map(([label, value]) => (
-                <li key={label}><span>{label}</span><strong>{value}</strong></li>
-              ))}
-            </ul>
+            <div className="company-storage-donut" style={{ '--used': `${storagePercent}%` }}><strong>{storagePercent}%</strong><small>{storageUsedGb.toFixed(2)} GB / {storageTotalGb} GB</small></div>
+            <ul>{[['Documents', '18.45 GB (38%)'], ['Images', '12.10 GB (25%)'], ['Database', '10.25 GB (21%)'], ['Backups', '5.56 GB (11%)'], ['Others', '2.00 GB (5%)']].map(([label, value]) => <li key={label}><span>{label}</span><strong>{value}</strong></li>)}</ul>
           </div>
-          <button className="btn btn-outline-primary btn-sm w-100 company-panel-btn" type="button">View Storage Details</button>
+          <button className="btn btn-outline-primary btn-sm w-100" type="button">View Storage Details</button>
         </section>
       </div>
 
       <div className="company-overview-grid">
         <div className="company-main-stack">
           <section className="company-info-panel">
-            <div className="company-panel-head">
-              <div>
-                <h2>Module Usage</h2>
-                <p>Modules enabled and actively used by this company</p>
-              </div>
-            </div>
-            <div className="company-module-list">
-              {[['Accounting', 'Active', 'bi-calculator', 'success'], ['Inventory', 'Active', 'bi-box-seam', 'purple'], ['Sales', 'Active', 'bi-receipt', 'primary'], ['Purchase', 'Active', 'bi-cart3', 'warning'], ['HRM', 'Active', 'bi-people', 'danger'], ['CRM', 'Inactive', 'bi-person-lines-fill', 'info'], ['POS', 'Active', 'bi-shop', 'primary']].map(([label, statusLabel, icon, tone]) => (
-                <span className={`is-${tone}${statusLabel === 'Inactive' ? ' is-inactive' : ''}`} key={label}>
-                  <i className={`bi ${icon}`} />
-                  <strong>{label}</strong>
-                  <small>{statusLabel}</small>
-                </span>
-              ))}
-              <button className="btn btn-outline-primary btn-sm company-module-more" type="button">View All</button>
-            </div>
+            <div className="company-panel-head"><div><h2>Module Usage</h2><p>Modules enabled and actively used by this company</p></div></div>
+            <div className="company-module-list">{[['Accounting', 'Active', 'bi-calculator', 'success'], ['Inventory', 'Active', 'bi-box-seam', 'purple'], ['Sales', 'Active', 'bi-receipt', 'primary'], ['Purchase', 'Active', 'bi-cart3', 'warning'], ['HRM', 'Active', 'bi-people', 'danger'], ['CRM', 'Inactive', 'bi-person-lines-fill', 'info'], ['POS', 'Active', 'bi-shop', 'primary']].map(([label, statusLabel, icon, tone]) => <span className={`is-${tone}`} key={label}><i className={`bi ${icon}`} /><strong>{label}</strong><small>{statusLabel}</small></span>)}<button className="btn btn-outline-primary btn-sm" type="button">View All</button></div>
           </section>
-
           <section className="company-info-panel">
-            <div className="company-panel-head">
-              <h2>Recent Activity</h2>
-              <button className="btn btn-outline-primary btn-sm" type="button">View All Activity</button>
-            </div>
-            <div className="company-activity-table-wrap">
-              <table className="company-activity-table">
-                <thead>
-                  <tr>
-                    <th>Activity</th>
-                    <th>By</th>
-                    <th>Date &amp; Time</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {activityRows.map(([activity, by, date, statusLabel, icon]) => (
-                    <tr key={activity}>
-                      <td><span className="company-activity-title"><i className={`bi ${icon}`} />{activity}</span></td>
-                      <td>{by}</td>
-                      <td>{date}</td>
-                      <td><span className={`company-activity-status is-${activityTone(statusLabel)}`}>{statusLabel}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <div className="company-panel-head"><div><h2>Recent Activity</h2></div><button className="btn btn-outline-primary btn-sm" type="button">View All Activity</button></div>
+            <div className="company-activity-list">{[['Plan upgraded to Enterprise', 'Admin User', '07 May 2024, 10:30 AM', 'Success'], ['New user added: John Doe', 'Admin User', '06 May 2024, 03:15 PM', 'Info'], ['Storage limit increased to 100 GB', 'Admin User', '05 May 2024, 11:20 AM', 'Success'], ['Invoice generated for May 2024', 'System', '01 May 2024, 09:00 AM', 'Invoice']].map(([activity, by, date, statusLabel]) => <span key={activity}><strong>{activity}</strong><small>{by}</small><small>{date}</small><em>{statusLabel}</em></span>)}</div>
           </section>
         </div>
-
         <section className="company-side-panel">
-          <div className="company-panel-head"><h2>Status &amp; Health</h2></div>
-          <div className="company-side-rows">
-            {[
-              ['Account Status', titleize(currentStatus), 'is-active'],
-              ['Data Backup', 'Up to date', 'is-good'],
-              ['Email Verification', 'Verified', 'is-good'],
-              ['Last Login', '07 May 2024, 10:30 AM', ''],
-              ['System Health', 'Good', 'is-good']
-            ].map(([label, value, tone]) => (
-              <div className="company-side-row" key={label}>
-                <span>{label}</span>
-                <strong className={tone || undefined}>{value}</strong>
-              </div>
-            ))}
-          </div>
-          <button className="btn btn-outline-primary btn-sm w-100 company-panel-btn" type="button">View System Logs</button>
+          <div className="company-panel-head"><div><h2>Status & Health</h2></div></div>
+          {[
+            ['Account Status', titleize(currentStatus)],
+            ['Data Backup', 'Up to date'],
+            ['Email Verification', 'Verified'],
+            ['Last Login', '07 May 2024, 10:30 AM'],
+            ['System Health', 'Good']
+          ].map(([label, value]) => <div className="company-side-row" key={label}><span>{label}</span><strong>{value}</strong></div>)}
+          <button className="btn btn-outline-primary btn-sm w-100" type="button">View System Logs</button>
         </section>
       </div>
 
@@ -1030,6 +885,153 @@ function AllCompaniesScreen({ rows, load }) {
   );
 }
 
+function TenantOverviewScreen({ rows }) {
+  const navigate = useNavigate();
+  const [dateRange, setDateRange] = useState('01 May 2024 - 07 May 2024');
+  const [trendPeriod, setTrendPeriod] = useState('Monthly');
+  const [showActivities, setShowActivities] = useState(false);
+  const companies = useMemo(() => rows.filter((row) => !row.module_key), [rows]);
+  const total = companies.length || 152;
+  const active = companyStatusCount(companies, 'active') || 98;
+  const trial = companyStatusCount(companies, 'trial') || 18;
+  const suspended = companyStatusCount(companies, 'suspended') || 12;
+  const expired = companyStatusCount(companies, 'inactive') || 10;
+  const pending = statusCount(companies, 'pending') || 14;
+  const storageGb = companies.reduce((sum, row) => sum + Number(row.storage_used_mb || 0), 0) / 1024 || 256.48;
+
+  const overviewCards = [
+    ['Total Companies', total, '12.5% from last month', 'bi-buildings', 'primary', 'up'],
+    ['Active Companies', active, '8.3% from last month', 'bi-check-circle', 'success', 'up'],
+    ['Trial Companies', trial, '2.1% from last month', 'bi-hourglass-split', 'warning', 'down'],
+    ['Suspended Companies', suspended, '5.6% from last month', 'bi-pause-fill', 'danger', 'down'],
+    ['Total Revenue', 'Rs. 12,45,320', '18.6% from last month', 'bi-x-octagon', 'purple', 'up'],
+    ['Total Users', '1,248', '15.6% from last month', 'bi-people', 'primary', 'up']
+  ];
+  const statuses = [
+    ['Active', active, '64.47%', '#12b76a'],
+    ['Trial', trial, '11.84%', '#f79009'],
+    ['Suspended', suspended, '7.89%', '#f04438'],
+    ['Expired', expired, '6.58%', '#9e77ed'],
+    ['Pending Approval', pending, '9.21%', '#315dff']
+  ];
+  const plans = [
+    ['Enterprise', 52, '34.21%', '#9e77ed'],
+    ['Professional', 45, '29.61%', '#5297ff'],
+    ['Basic', 32, '21.05%', '#12b76a'],
+    ['Standard', 15, '9.86%', '#f79009'],
+    ['Custom', 8, '5.26%', '#9e77ed']
+  ];
+  const trendViews = {
+    Weekly: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], path: 'M0 142 C42 102 82 126 120 92 S200 54 246 84 310 132 360 86 430 44 520 72' },
+    Monthly: { labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'], path: 'M0 150 C45 90 75 95 105 118 S165 165 210 112 265 35 322 82 395 120 450 62 490 20 520 48' },
+    Quarterly: { labels: ['Q1', 'Q2', 'Q3', 'Q4'], path: 'M0 154 C72 118 122 132 178 92 S286 34 352 82 436 150 520 64' }
+  };
+  const activeTrend = trendViews[trendPeriod] || trendViews.Monthly;
+  const activities = [
+    ['Bright Future Solutions', 'New company registered', '2 mins ago', 'bi-buildings', 'success', 'all-companies'],
+    ['Acme Corporation Pvt. Ltd.', 'Plan upgraded to Enterprise', '10 mins ago', 'bi-arrow-up', 'purple', 'plans'],
+    ['Global Tech Systems', 'Company suspended', '30 mins ago', 'bi-slash-circle', 'danger', 'suspended-companies'],
+    ['NextGen Innovations', 'Storage limit increased', '1 hour ago', 'bi-cloud-arrow-up', 'primary', 'company-storage'],
+    ['Alpha Enterprises', 'New user added', '2 hours ago', 'bi-person', 'warning', 'all-users']
+  ];
+  const goModule = (moduleName) => navigate(`/super-admin/modules/${moduleName}`);
+  const downloadReport = () => {
+    const lines = [
+      ['Tenant Overview Report'],
+      ['Date Range', dateRange],
+      ['Trend View', trendPeriod],
+      [],
+      ['Metric', 'Value', 'Change'],
+      ...overviewCards.map(([label, value, sub]) => [label, value, sub]),
+      [],
+      ['Status', 'Companies', 'Percent'],
+      ...statuses.map(([label, value, percent]) => [label, value, percent]),
+      [],
+      ['Plan', 'Companies', 'Percent'],
+      ...plans.map(([label, value, percent]) => [label, value, percent])
+    ];
+    const csv = lines.map((line) => line.map((cell) => `"${String(cell ?? '').replaceAll('"', '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `tenant-overview-${dateRange.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <section className="tenant-overview-page">
+      <div className="tenant-overview-top">
+        <div>
+          <div className="company-breadcrumb">Tenant Management <i className="bi bi-chevron-right" /> <strong>Overview</strong></div>
+          <h1>Overview</h1>
+          <p>Complete overview of all tenant companies and platform usage.</p>
+        </div>
+        <div className="tenant-overview-actions">
+          <label className="tenant-inline-select"><i className="bi bi-calendar3" /><select value={dateRange} onChange={(event) => setDateRange(event.target.value)} aria-label="Report date range"><option>01 May 2024 - 07 May 2024</option><option>08 May 2024 - 14 May 2024</option><option>May 2024</option><option>Last 30 Days</option></select></label>
+          <button className="btn btn-outline-secondary btn-sm" type="button" onClick={downloadReport}><i className="bi bi-download" /> Download Report</button>
+        </div>
+      </div>
+      <div className="tenant-overview-stats">
+        {overviewCards.map(([label, value, sub, icon, tone, trend]) => <article className={`tenant-overview-stat is-${tone}`} key={label}><i className={`bi ${icon}`} /><span>{label}</span><strong>{value}</strong><small className={`is-${trend}`}>{trend === 'up' ? '↑' : '↓'} {sub}</small></article>)}
+      </div>
+      <div className="tenant-overview-grid">
+        <section className="tenant-overview-panel">
+          <h2>Company Status Distribution</h2>
+          <div className="tenant-status-content"><div className="tenant-status-donut"><strong>{total}</strong><small>Total</small></div><ul>{statuses.map(([label, value, percent, color]) => <li key={label}><span style={{ '--dot': color }}>{label}</span><strong>{value} ({percent})</strong></li>)}</ul></div>
+          <button type="button" className="tenant-panel-link" onClick={() => goModule('company-status')}>View Company Status <i className="bi bi-arrow-right" /></button>
+        </section>
+        <section className="tenant-overview-panel">
+          <div className="tenant-panel-head"><h2>New Companies Trend</h2><select className="form-select form-select-sm tenant-period-select" value={trendPeriod} onChange={(event) => setTrendPeriod(event.target.value)} aria-label="Company trend period"><option>Weekly</option><option>Monthly</option><option>Quarterly</option></select></div>
+          <div className="tenant-line-chart"><svg viewBox="0 0 520 210" preserveAspectRatio="none"><g>{[40,80,120,160].map((y) => <line key={y} x1="0" x2="520" y1={y} y2={y} />)}</g><path d={activeTrend.path} /></svg><div>{activeTrend.labels.map((label) => <span key={label}>{label}</span>)}</div></div>
+          <button type="button" className="tenant-panel-link" onClick={() => goModule('all-companies')}>View All Companies <i className="bi bi-arrow-right" /></button>
+        </section>
+        <section className="tenant-overview-panel">
+          <h2>Top Plans by Companies</h2>
+          <div className="tenant-plan-list">{plans.map(([label, value, percent, color]) => <span key={label}><small>{label}</small><b><em style={{ width: `${value}%`, background: color }} /></b><strong>{value} ({percent})</strong></span>)}</div>
+          <button type="button" className="tenant-panel-link" onClick={() => goModule('plans')}>View Plans <i className="bi bi-arrow-right" /></button>
+        </section>
+        <section className="tenant-overview-panel">
+          <div className="tenant-panel-head"><h2>Company Requests</h2><button className="btn btn-outline-primary btn-sm" type="button" onClick={() => goModule('company-requests')}>View All</button></div>
+          {[['Pending Requests', 8, 'bi-file-earmark-text', 'warning'], ['Approved Requests', 32, 'bi-check2-square', 'success'], ['Rejected Requests', 5, 'bi-slash-circle', 'danger']].map(([label, value, icon, tone]) => <div className="tenant-mini-row" key={label}><span className={`is-${tone}`}><i className={`bi ${icon}`} /> {label}</span><strong>{value}</strong></div>)}
+          <button type="button" className="tenant-panel-link" onClick={() => goModule('company-requests')}>Manage Requests <i className="bi bi-arrow-right" /></button>
+        </section>
+        <section className="tenant-overview-panel">
+          <div className="tenant-panel-head"><h2>Suspended Companies</h2><button className="btn btn-outline-primary btn-sm" type="button" onClick={() => goModule('suspended-companies')}>View All</button></div>
+          {[['Total Suspended', suspended, 'bi-slash-circle', 'danger'], ['Suspended This Month', 3, 'bi-clock-history', 'purple'], ['Reactivated This Month', 2, 'bi-check-circle', 'success']].map(([label, value, icon, tone]) => <div className="tenant-mini-row" key={label}><span className={`is-${tone}`}><i className={`bi ${icon}`} /> {label}</span><strong>{value}</strong></div>)}
+          <button type="button" className="tenant-panel-link" onClick={() => goModule('suspended-companies')}>Manage Suspended Companies <i className="bi bi-arrow-right" /></button>
+        </section>
+        <section className="tenant-overview-panel">
+          <div className="tenant-panel-head"><h2>Platform Usage Summary</h2><button className="btn btn-outline-primary btn-sm" type="button" onClick={() => goModule('analytics-companies')}>View Analytics</button></div>
+          {[['Total Storage Used', `${storageGb.toFixed(2)} GB`, 'bi-calendar2'], ['Avg. Storage per Company', '1.69 GB', 'bi-hdd'], ['Total Users', '1,248', 'bi-person'], ['Active Users', '856', 'bi-people'], ['Total Logins (This Month)', '4,562', 'bi-clock-history']].map(([label, value, icon]) => <div className="tenant-usage-row" key={label}><span><i className={`bi ${icon}`} /> {label}</span><strong>{value}</strong></div>)}
+          <button type="button" className="tenant-panel-link" onClick={() => goModule('analytics-companies')}>View Detailed Analytics <i className="bi bi-arrow-right" /></button>
+        </section>
+      </div>
+      <section className="tenant-overview-panel tenant-activity-panel">
+        <div className="tenant-panel-head"><h2>Recent Activity</h2><button className="btn btn-outline-primary btn-sm" type="button" onClick={() => setShowActivities(true)}>View All Activity <i className="bi bi-arrow-right" /></button></div>
+        <div className="tenant-activity-strip">{activities.map(([name, text, time, icon, tone, moduleName]) => <button type="button" className={`tenant-activity-item is-${tone}`} key={name} onClick={() => goModule(moduleName)}><i className={`bi ${icon}`} /><strong>{name}</strong><span>{text}</span><small>{time}</small></button>)}</div>
+      </section>
+      {showActivities ? (
+        <>
+          <div className="modal fade company-modal show d-block" tabIndex="-1" role="dialog" aria-modal="true">
+            <div className="modal-dialog modal-lg modal-dialog-scrollable">
+              <div className="modal-content">
+                <div className="modal-header"><h2 className="modal-title h5">All Activity</h2><button type="button" className="btn-close" onClick={() => setShowActivities(false)} aria-label="Close" /></div>
+                <div className="modal-body">
+                  <div className="tenant-activity-list">{activities.map(([name, text, time, icon, tone, moduleName]) => <button type="button" className={`tenant-activity-list-item is-${tone}`} key={`${name}-${text}`} onClick={() => { setShowActivities(false); goModule(moduleName); }}><i className={`bi ${icon}`} /><span><strong>{name}</strong><small>{text}</small></span><em>{time}</em></button>)}</div>
+                </div>
+                <div className="modal-footer"><button type="button" className="btn btn-outline-secondary" onClick={() => setShowActivities(false)}>Close</button><button type="button" className="btn btn-primary" onClick={() => { setShowActivities(false); goModule('platform-audit-logs'); }}>Open Audit Logs</button></div>
+              </div>
+            </div>
+          </div>
+          <div className="modal-backdrop fade show" />
+        </>
+      ) : null}
+    </section>
+  );
+}
+
 export function SuperModule() {
   const { module = 'company-details' } = useParams();
   const [rows, setRows] = useState([]);
@@ -1050,6 +1052,10 @@ export function SuperModule() {
   }, [module]);
 
   const visibleRows = rows.filter((row) => JSON.stringify(row).toLowerCase().includes(query.toLowerCase()));
+
+  if (module === 'overview') {
+    return <TenantOverviewScreen rows={rows} />;
+  }
 
   if (module === 'all-companies') {
     return <AllCompaniesScreen rows={rows} load={load} />;

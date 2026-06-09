@@ -17,7 +17,7 @@ export const adminModules = [
 export const superModules = [
   { group: 'Dashboard', items: [{ label: 'Dashboard', path: '/super-admin' }] },
   { group: 'Email', items: [{ label: 'Inbox', path: '/super-admin/email' }] },
-  { group: 'Tenant Management', items: ['All Companies', 'Company Status', 'Company Details', 'Company Requests', 'Suspended Companies', 'Company Usage', 'Company Storage'].map((label) => ({ label, path: `/super-admin/modules/${slug(label)}` })) },
+  { group: 'Tenant Management', items: ['Overview', 'All Companies', 'Company Status',  'Company Details', 'Company Requests', 'Suspended Companies', 'Company Usage', 'Company Storage'].map((label) => ({ label, path: `/super-admin/modules/${slug(label)}` })) },
   { group: 'Subscriptions', items: ['Active Subscriptions', 'Trial Subscriptions', 'Expired Subscriptions', 'Renewals', 'Upgrade Requests', 'Downgrade Requests', 'Cancelled Subscriptions'].map((label) => ({ label, path: `/super-admin/modules/${slug(label)}` })) },
   { group: 'Plans & Features', items: ['Plans', 'Features', 'Feature Limits', 'Pricing Rules', 'Coupons', 'Free Plan', 'Starter Plan', 'Business Plan', 'Enterprise Plan', 'Module Access', 'Custom Pricing'].map((label) => ({ label, path: `/super-admin/modules/${label.includes('Plan') && !['Plans', 'Pricing Rules'].includes(label) ? `plan-${slug(label.replace(' Plan', ''))}` : slug(label)}` })) },
   { group: 'Users', items: ['All Users', 'Vendor Admins', 'Company Users', 'Staff Users', 'Super Admin Users', 'User Activity', 'Login History', 'User Permissions'].map((label) => ({ label, path: `/super-admin/modules/${slug(label)}` })) },

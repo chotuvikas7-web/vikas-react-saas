@@ -293,398 +293,11 @@
 
 .company-details-exact {
     display: grid;
-    gap: 1.25rem;
-    max-width: 100%;
-    min-width: 0;
-}
-
-.company-details-exact .company-details-header {
-    margin-bottom: 0;
+    gap: 1rem;
 }
 
 .company-details-exact .company-profile-overview {
     margin-bottom: 0;
-    padding: 1.25rem 1.35rem .85rem;
-}
-
-.company-details-exact .company-profile-top {
-    align-items: center;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    justify-content: space-between;
-}
-
-.company-details-exact .company-profile-identity {
-    align-items: center;
-    display: flex;
-    flex: 1 1 320px;
-    gap: 1rem;
-    min-width: 0;
-}
-
-.company-details-exact .company-profile-title h1 {
-    color: #101828;
-    font-size: 1.35rem;
-    font-weight: 800;
-    line-height: 1.25;
-    margin: 0;
-}
-
-.company-details-exact .company-profile-title p {
-    color: #667085;
-    font-size: .8125rem;
-    font-weight: 600;
-    line-height: 1.5;
-    margin: .4rem 0 0;
-}
-
-.company-details-exact .company-meta-dot {
-    background: #d0d5dd;
-    border-radius: 50%;
-    display: inline-block;
-    height: 4px;
-    margin: 0 .55rem;
-    vertical-align: middle;
-    width: 4px;
-}
-
-.company-details-exact .company-profile-stats {
-    border: 1px solid #eef2f7;
-    border-radius: 10px;
-    flex: 0 1 auto;
-    gap: 0;
-    justify-content: stretch;
-    margin-top: 0;
-    overflow: hidden;
-    padding: 0;
-}
-
-.company-details-exact .company-profile-stats > span {
-    border-right: 1px solid #eef2f7;
-    gap: .12rem .6rem;
-    grid-template-columns: 34px 1fr;
-    min-width: 128px;
-    padding: .85rem 1.1rem;
-}
-
-.company-details-exact .company-profile-stats > span:last-child {
-    border-right: 0;
-}
-
-.company-details-exact .company-profile-stats i {
-    height: 34px;
-    width: 34px;
-}
-
-.company-details-exact .company-profile-stats small {
-    font-size: .7rem;
-}
-
-.company-details-exact .company-profile-stats strong {
-    font-size: .95rem;
-}
-
-.company-details-exact .company-profile-stats em {
-    font-size: .68rem;
-}
-
-.company-details-exact .company-profile-actions {
-    align-items: center;
-    flex: 0 0 auto;
-    gap: .55rem;
-}
-
-.company-details-exact .company-edit-btn {
-    align-items: center;
-    display: inline-flex;
-    gap: .35rem;
-}
-
-.company-details-exact .company-tabs {
-    margin-top: 1.15rem;
-    padding-top: .75rem;
-}
-
-.company-details-exact .company-tabs button {
-    font-size: .8rem;
-    padding: 0 .75rem;
-}
-
-.company-details-exact .company-panel-head {
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    width: 100%;
-}
-
-.company-details-exact .company-panel-head h2 {
-    color: #101828;
-    font-size: 1rem;
-    font-weight: 800;
-    margin: 0;
-}
-
-.company-details-exact .company-panel-head p {
-    color: #667085;
-    font-size: .78rem;
-    font-weight: 600;
-    margin: .3rem 0 0;
-}
-
-.company-details-exact .company-info-panel,
-.company-details-exact .company-side-panel {
-    padding: 1.15rem 1.25rem;
-}
-
-.company-details-exact .company-info-body {
-    align-items: stretch;
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: minmax(0, 1fr) 150px;
-}
-
-.company-details-exact .company-info-list {
-    gap: .9rem 1.25rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.company-details-exact .company-info-list small {
-    font-size: .75rem;
-    font-weight: 600;
-}
-
-.company-details-exact .company-info-list strong {
-    font-size: .8125rem;
-    font-weight: 700;
-}
-
-.company-details-exact .company-info-art {
-    align-items: center;
-    background: linear-gradient(160deg, #f5f8ff 0%, #eef4ff 100%);
-    border: 1px solid #e4ebff;
-    border-radius: 12px;
-    color: #98a2b3;
-    display: flex;
-    font-size: 3.5rem;
-    justify-content: center;
-    min-height: 100%;
-}
-
-.company-details-exact .company-panel-action,
-.company-details-exact .company-panel-btn {
-    margin-top: 1rem;
-}
-
-.company-details-exact .company-panel-action {
-    margin-inline: auto;
-    min-width: 200px;
-}
-
-.company-details-exact .company-side-rows {
-    display: grid;
-    gap: .85rem;
-}
-
-.company-details-exact .company-side-row {
-    align-items: start;
-    gap: .75rem;
-}
-
-.company-details-exact .company-side-row span {
-    font-size: .75rem;
-}
-
-.company-details-exact .company-side-row strong {
-    font-size: .8125rem;
-    text-align: right;
-}
-
-.company-details-exact .company-side-row strong.is-active {
-    color: #079455;
-}
-
-.company-details-exact .company-side-row strong.is-good {
-    color: #079455;
-}
-
-.company-details-exact .company-side-row.is-billing strong {
-    align-items: flex-end;
-    display: flex;
-    flex-direction: column;
-    gap: .15rem;
-}
-
-.company-details-exact .company-billing-note {
-    color: #079455;
-    font-size: .72rem;
-    font-style: normal;
-    font-weight: 700;
-}
-
-.company-details-exact .company-date-chip {
-    font-size: .75rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
-
-.company-details-exact .company-usage-grid {
-    gap: .75rem;
-}
-
-.company-details-exact .company-usage-card {
-    min-height: 108px;
-    padding: .8rem .85rem;
-}
-
-.company-details-exact .company-usage-card strong {
-    font-size: 1rem;
-}
-
-.company-details-exact .company-module-list {
-    gap: .6rem;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.company-details-exact .company-module-list .is-inactive small {
-    color: #98a2b3;
-}
-
-.company-details-exact .company-module-more {
-    align-self: stretch;
-    grid-column: span 1;
-    justify-content: center;
-    min-height: 58px;
-}
-
-.company-details-exact .company-activity-table-wrap {
-    overflow-x: auto;
-}
-
-.company-details-exact .company-activity-table {
-    margin-bottom: 0;
-    min-width: 560px;
-    width: 100%;
-}
-
-.company-details-exact .company-activity-table thead th {
-    background: #fafbfe;
-    border-bottom: 1px solid #eef2f7;
-    color: #667085;
-    font-size: .72rem;
-    font-weight: 700;
-    padding: .65rem .75rem;
-    white-space: nowrap;
-}
-
-.company-details-exact .company-activity-table tbody td {
-    border-bottom: 1px solid #f2f4f7;
-    color: #344054;
-    font-size: .78rem;
-    font-weight: 600;
-    padding: .7rem .75rem;
-    vertical-align: middle;
-}
-
-.company-details-exact .company-activity-table tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-.company-details-exact .company-activity-title {
-    align-items: center;
-    display: inline-flex;
-    gap: .5rem;
-}
-
-.company-details-exact .company-activity-title i {
-    color: #98a2b3;
-    font-size: .95rem;
-}
-
-.company-details-exact .company-activity-status {
-    border-radius: 999px;
-    display: inline-flex;
-    font-size: .68rem;
-    font-weight: 800;
-    padding: .2rem .5rem;
-}
-
-.company-details-exact .company-activity-status.is-success {
-    background: #dcfae6;
-    color: #079455;
-}
-
-.company-details-exact .company-activity-status.is-info {
-    background: #e0f2fe;
-    color: #0284c7;
-}
-
-.company-details-exact .company-activity-status.is-invoice {
-    background: #ede9fe;
-    color: #7c3aed;
-}
-
-@media (max-width: 1399px) {
-    .company-details-exact .company-profile-top {
-        align-items: flex-start;
-    }
-
-    .company-details-exact .company-profile-stats {
-        flex: 1 1 100%;
-        flex-wrap: wrap;
-    }
-
-    .company-details-exact .company-profile-stats > span {
-        flex: 1 1 25%;
-        min-width: 140px;
-    }
-}
-
-@media (max-width: 991px) {
-    .company-details-exact .company-overview-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .company-details-exact .company-info-body {
-        grid-template-columns: 1fr;
-    }
-
-    .company-details-exact .company-info-art {
-        min-height: 120px;
-    }
-
-    .company-details-exact .company-usage-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .company-details-exact .company-module-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 767px) {
-    .company-details-exact .company-profile-identity,
-    .company-details-exact .company-profile-actions {
-        flex: 1 1 100%;
-    }
-
-    .company-details-exact .company-profile-stats > span {
-        flex: 1 1 50%;
-        border-bottom: 1px solid #eef2f7;
-    }
-
-    .company-details-exact .company-info-list {
-        grid-template-columns: 1fr;
-    }
-
-    .company-details-exact .company-usage-grid,
-    .company-details-exact .company-module-list {
-        grid-template-columns: 1fr;
-    }
-
-    .company-details-exact .company-storage-summary {
-        grid-template-columns: 1fr;
-        justify-items: center;
-    }
 }
 
 .company-page-head,
@@ -1583,7 +1196,7 @@
     color: var(--super-primary, #465dff);
 }
 
-@media (max-width: 1399px) {
+@media (max-width: 1199px) {
     .all-company-stats {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -5653,6 +5266,18 @@ body.admin-sidebar-collapsed .admin-nav-children {
     padding: 1.35rem 0 1rem;
 }
 
+.super-main > .super-topbar + :not(.super-page-head) {
+    margin-top: 1rem;
+}
+
+.super-main :is(.module-page-header, .company-breadcrumb, .super-page-head .breadcrumb) {
+    min-width: 0;
+}
+
+.super-main :is(.module-breadcrumb, .company-breadcrumb, .super-page-head .breadcrumb) {
+    line-height: 1.35;
+}
+
 .super-page-head h1 {
     color: #101828;
     font-size: 1.45rem;
@@ -7663,5 +7288,704 @@ body.super-sidebar-collapsed .super-nav-link {
 
     .ledger-view-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* Super Admin Tenant Overview */
+.tenant-overview-page {
+    color: #344054;
+    display: grid;
+    gap: 1rem;
+    padding-top: .65rem;
+}
+
+.tenant-overview-top,
+.tenant-overview-actions,
+.tenant-panel-head,
+.tenant-mini-row,
+.tenant-usage-row {
+    align-items: center;
+    display: flex;
+}
+
+.tenant-overview-top {
+    justify-content: space-between;
+}
+
+.tenant-overview-top h1 {
+    color: #101828;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: .6rem 0 .35rem;
+}
+
+.tenant-overview-top p {
+    color: #50617e;
+    font-size: .8125rem;
+    margin: 0;
+}
+
+.tenant-overview-actions {
+    gap: .65rem;
+}
+
+.tenant-inline-select {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #d8e0ec;
+    border-radius: 8px;
+    color: #344054;
+    display: inline-flex;
+    font-size: .8125rem;
+    font-weight: 800;
+    gap: .45rem;
+    min-height: 34px;
+    padding: 0 .75rem;
+}
+
+.tenant-inline-select select {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    outline: 0;
+    padding: 0 1rem 0 0;
+}
+
+.tenant-overview-stats {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tenant-overview-stat,
+.tenant-overview-panel {
+    background: #fff;
+    border: 1px solid #e4e9f2;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(16, 24, 40, .04);
+}
+
+.tenant-overview-stat {
+    display: grid;
+    gap: .3rem;
+    grid-template-columns: 42px 1fr;
+    min-height: 108px;
+    padding: 1rem;
+}
+
+.tenant-overview-stat i {
+    align-items: center;
+    border-radius: 50%;
+    display: inline-flex;
+    font-size: 1.1rem;
+    grid-row: span 3;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+}
+
+.tenant-overview-stat.is-primary i { background: #eaf0ff; color: #315dff; }
+.tenant-overview-stat.is-success i { background: #dcfae6; color: #079455; }
+.tenant-overview-stat.is-warning i { background: #fff0dc; color: #f79009; }
+.tenant-overview-stat.is-danger i { background: #ffe8ef; color: #f04438; }
+.tenant-overview-stat.is-purple i { background: #f1e8ff; color: #7a4fed; }
+
+.tenant-overview-stat span {
+    color: #50617e;
+    font-size: .75rem;
+    font-weight: 800;
+}
+
+.tenant-overview-stat strong {
+    color: #101828;
+    font-size: 1.15rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.tenant-overview-stat small {
+    font-size: .72rem;
+    font-weight: 800;
+}
+
+.tenant-overview-stat small.is-up { color: #079455; }
+.tenant-overview-stat small.is-down { color: #f04438; }
+
+.tenant-overview-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tenant-overview-grid.is-small {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tenant-overview-panel {
+    display: grid;
+    gap: 1rem;
+    overflow: hidden;
+    padding: 1rem;
+}
+
+.tenant-overview-panel h2 {
+    color: #101828;
+    font-size: .95rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.tenant-overview-panel > a,
+.tenant-panel-link {
+    background: #fff;
+    border-top: 1px solid #eef2f7;
+    color: var(--super-primary, #465dff);
+    font-size: .8125rem;
+    font-weight: 800;
+    margin: 0 -1rem -1rem;
+    padding: .85rem 1rem;
+    text-decoration: none;
+}
+
+.tenant-panel-link {
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    text-align: left;
+}
+
+.tenant-panel-link:hover {
+    background: #f8faff;
+}
+
+.tenant-period-select {
+    max-width: 118px;
+}
+
+.tenant-panel-head {
+    justify-content: space-between;
+}
+
+.tenant-status-content {
+    align-items: center;
+    display: grid;
+    gap: .9rem;
+    grid-template-columns: minmax(128px, 150px) 1fr;
+}
+
+.tenant-status-donut {
+    align-items: center;
+    aspect-ratio: 1;
+    background: conic-gradient(#12b76a 0 64%, #f79009 64% 76%, #f04438 76% 84%, #9e77ed 84% 91%, #315dff 91% 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.tenant-status-donut::before {
+    background: #fff;
+    border-radius: inherit;
+    content: "";
+    inset: 28%;
+    position: absolute;
+}
+
+.tenant-status-donut strong,
+.tenant-status-donut small {
+    position: relative;
+}
+
+.tenant-status-donut strong {
+    color: #101828;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+
+.tenant-status-content ul {
+    display: grid;
+    gap: .75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tenant-status-content li,
+.tenant-plan-list span {
+    align-items: center;
+    display: grid;
+    gap: .75rem;
+    grid-template-columns: 1fr auto;
+}
+
+.tenant-status-content li span,
+.tenant-plan-list small {
+    color: #18243d;
+    font-size: .8125rem;
+    font-weight: 800;
+}
+
+.tenant-status-content li span::before {
+    background: var(--dot);
+    border-radius: 50%;
+    content: "";
+    display: inline-block;
+    height: 8px;
+    margin-right: .55rem;
+    width: 8px;
+}
+
+.tenant-status-content li strong,
+.tenant-plan-list strong {
+    color: #344054;
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.tenant-line-chart svg {
+    height: 210px;
+    width: 100%;
+}
+
+.tenant-line-chart line {
+    stroke: #e9edf5;
+}
+
+.tenant-line-chart path {
+    fill: none;
+    stroke: var(--super-primary, #465dff);
+    stroke-width: 4;
+}
+
+.tenant-line-chart div {
+    color: #667085;
+    display: flex;
+    font-size: .78rem;
+    font-weight: 700;
+    justify-content: space-around;
+}
+
+.tenant-plan-list {
+    display: grid;
+    gap: 1.1rem;
+}
+
+.tenant-plan-list span {
+    grid-template-columns: 90px minmax(72px, 1fr) 82px;
+}
+
+.tenant-plan-list b {
+    background: #eef2f7;
+    border-radius: 999px;
+    height: 7px;
+    overflow: hidden;
+}
+
+.tenant-plan-list em {
+    border-radius: inherit;
+    display: block;
+    height: 100%;
+}
+
+.tenant-mini-row,
+.tenant-usage-row {
+    border-bottom: 1px solid #eef2f7;
+    justify-content: space-between;
+    min-height: 44px;
+}
+
+.tenant-mini-row span,
+.tenant-usage-row span {
+    color: #18243d;
+    font-size: .8125rem;
+    font-weight: 800;
+}
+
+.tenant-mini-row i,
+.tenant-usage-row i {
+    margin-right: .55rem;
+}
+
+.tenant-mini-row strong {
+    border-radius: 999px;
+    color: #f79009;
+    font-size: .75rem;
+    padding: .2rem .5rem;
+}
+
+.tenant-usage-row strong {
+    color: #101828;
+    font-size: .8125rem;
+    font-weight: 800;
+}
+
+.tenant-activity-strip {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.tenant-activity-strip article,
+.tenant-activity-item {
+    background: transparent;
+    border: 0;
+    display: grid;
+    gap: .2rem;
+    grid-template-columns: 42px 1fr;
+    padding: 0;
+    text-align: left;
+}
+
+.tenant-activity-strip i,
+.tenant-activity-list-item > i {
+    align-items: center;
+    border-radius: 50%;
+    display: inline-flex;
+    font-size: 1rem;
+    grid-row: span 3;
+    height: 42px;
+    justify-content: center;
+    width: 42px;
+}
+
+.tenant-activity-strip .is-success i { background: #dcfae6; color: #079455; }
+.tenant-activity-strip .is-purple i { background: #f1e8ff; color: #7a4fed; }
+.tenant-activity-strip .is-danger i { background: #ffe8ef; color: #f04438; }
+.tenant-activity-strip .is-primary i { background: #eaf0ff; color: #315dff; }
+.tenant-activity-strip .is-warning i { background: #fff0dc; color: #f79009; }
+.tenant-activity-list-item.is-success > i { background: #dcfae6; color: #079455; }
+.tenant-activity-list-item.is-purple > i { background: #f1e8ff; color: #7a4fed; }
+.tenant-activity-list-item.is-danger > i { background: #ffe8ef; color: #f04438; }
+.tenant-activity-list-item.is-primary > i { background: #eaf0ff; color: #315dff; }
+.tenant-activity-list-item.is-warning > i { background: #fff0dc; color: #f79009; }
+
+.tenant-activity-strip strong {
+    color: #101828;
+    font-size: .78rem;
+    font-weight: 800;
+}
+
+.tenant-activity-strip span,
+.tenant-activity-strip small {
+    color: #50617e;
+    font-size: .75rem;
+    font-weight: 700;
+}
+
+.tenant-activity-item {
+    cursor: pointer;
+}
+
+.tenant-activity-item:hover strong {
+    color: var(--super-primary, #465dff);
+}
+
+.tenant-activity-list {
+    display: grid;
+    gap: .75rem;
+}
+
+.tenant-activity-list-item {
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e4e9f2;
+    border-radius: 10px;
+    display: grid;
+    gap: .75rem;
+    grid-template-columns: 42px 1fr auto;
+    padding: .85rem;
+    text-align: left;
+}
+
+.tenant-activity-list-item span {
+    display: grid;
+    gap: .2rem;
+}
+
+.tenant-activity-list-item strong {
+    color: #101828;
+    font-size: .85rem;
+}
+
+.tenant-activity-list-item small,
+.tenant-activity-list-item em {
+    color: #667085;
+    font-size: .75rem;
+    font-style: normal;
+    font-weight: 700;
+}
+
+/* Unified action controls for Admin and Super Admin */
+.admin-main,
+.super-main,
+.admin-topbar,
+.super-topbar,
+.admin-form-modal,
+.super-form-modal,
+.company-modal,
+.ledger-modal {
+    --action-height: 40px;
+    --action-height-sm: 34px;
+    --action-radius: 8px;
+    --action-font-size: .8125rem;
+    --action-font-weight: 800;
+    --action-icon-gap: .45rem;
+    --action-primary: var(--primary, var(--super-primary, #2563eb));
+    --action-primary-text: var(--primary-text, #fff);
+    --action-muted-bg: #fff;
+    --action-muted-border: #d8e0ec;
+    --action-muted-color: #344054;
+}
+
+.admin-main :is(.btn, a.btn),
+.super-main :is(.btn, a.btn),
+.admin-topbar :is(.btn, a.btn),
+.super-topbar :is(.btn, a.btn),
+.admin-form-modal :is(.btn, a.btn),
+.super-form-modal :is(.btn, a.btn),
+.company-modal :is(.btn, a.btn),
+.ledger-modal :is(.btn, a.btn) {
+    align-items: center;
+    border-radius: var(--action-radius);
+    display: inline-flex;
+    font-size: var(--action-font-size);
+    font-weight: var(--action-font-weight);
+    gap: var(--action-icon-gap);
+    justify-content: center;
+    line-height: 1.1;
+    max-width: 100%;
+    min-height: var(--action-height);
+    min-width: 0;
+    padding: 0 1rem;
+    text-decoration: none;
+    white-space: normal;
+}
+
+.admin-main :is(.btn-sm, .btn-group-sm > .btn),
+.super-main :is(.btn-sm, .btn-group-sm > .btn),
+.admin-topbar :is(.btn-sm, .btn-group-sm > .btn),
+.super-topbar :is(.btn-sm, .btn-group-sm > .btn),
+.admin-form-modal :is(.btn-sm, .btn-group-sm > .btn),
+.super-form-modal :is(.btn-sm, .btn-group-sm > .btn),
+.company-modal :is(.btn-sm, .btn-group-sm > .btn),
+.ledger-modal :is(.btn-sm, .btn-group-sm > .btn) {
+    border-radius: 7px;
+    font-size: .7875rem;
+    min-height: var(--action-height-sm);
+    padding: 0 .85rem;
+}
+
+.admin-main :is(.btn, a.btn) i,
+.super-main :is(.btn, a.btn) i,
+.admin-topbar :is(.btn, a.btn) i,
+.super-topbar :is(.btn, a.btn) i,
+.company-modal :is(.btn, a.btn) i,
+.ledger-modal :is(.btn, a.btn) i {
+    flex: 0 0 auto;
+}
+
+.admin-main :is(.btn-primary, a.btn-primary),
+.super-main :is(.btn-primary, a.btn-primary),
+.admin-topbar :is(.btn-primary, a.btn-primary),
+.super-topbar :is(.btn-primary, a.btn-primary),
+.admin-form-modal :is(.btn-primary, a.btn-primary),
+.super-form-modal :is(.btn-primary, a.btn-primary),
+.company-modal :is(.btn-primary, a.btn-primary),
+.ledger-modal :is(.btn-primary, a.btn-primary) {
+    --bs-btn-bg: var(--action-primary);
+    --bs-btn-border-color: var(--action-primary);
+    --bs-btn-color: var(--action-primary-text);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--action-primary) 88%, #000);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--action-primary) 88%, #000);
+    --bs-btn-hover-color: var(--action-primary-text);
+    --bs-btn-active-bg: color-mix(in srgb, var(--action-primary) 78%, #000);
+    --bs-btn-active-border-color: color-mix(in srgb, var(--action-primary) 78%, #000);
+    box-shadow: 0 10px 18px color-mix(in srgb, var(--action-primary) 18%, transparent);
+}
+
+.admin-main :is(.btn-outline-primary, a.btn-outline-primary),
+.super-main :is(.btn-outline-primary, a.btn-outline-primary),
+.admin-form-modal :is(.btn-outline-primary, a.btn-outline-primary),
+.super-form-modal :is(.btn-outline-primary, a.btn-outline-primary),
+.company-modal :is(.btn-outline-primary, a.btn-outline-primary),
+.ledger-modal :is(.btn-outline-primary, a.btn-outline-primary) {
+    --bs-btn-bg: #fff;
+    --bs-btn-color: var(--action-primary);
+    --bs-btn-border-color: color-mix(in srgb, var(--action-primary) 78%, #fff);
+    --bs-btn-hover-color: var(--action-primary-text);
+    --bs-btn-hover-bg: var(--action-primary);
+    --bs-btn-hover-border-color: var(--action-primary);
+}
+
+.admin-main :is(.btn-outline-secondary, a.btn-outline-secondary),
+.super-main :is(.btn-outline-secondary, a.btn-outline-secondary),
+.admin-form-modal :is(.btn-outline-secondary, a.btn-outline-secondary),
+.super-form-modal :is(.btn-outline-secondary, a.btn-outline-secondary),
+.company-modal :is(.btn-outline-secondary, a.btn-outline-secondary),
+.ledger-modal :is(.btn-outline-secondary, a.btn-outline-secondary) {
+    --bs-btn-bg: var(--action-muted-bg);
+    --bs-btn-color: var(--action-muted-color);
+    --bs-btn-border-color: var(--action-muted-border);
+    --bs-btn-hover-color: #101828;
+    --bs-btn-hover-bg: #f8faff;
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--action-primary) 32%, var(--action-muted-border));
+}
+
+.admin-main :is(.btn-outline-danger, a.btn-outline-danger),
+.super-main :is(.btn-outline-danger, a.btn-outline-danger),
+.company-modal :is(.btn-outline-danger, a.btn-outline-danger),
+.ledger-modal :is(.btn-outline-danger, a.btn-outline-danger) {
+    --bs-btn-color: #f04438;
+    --bs-btn-border-color: #fecdca;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #f04438;
+    --bs-btn-hover-border-color: #f04438;
+}
+
+.admin-main :is(.btn i, a.btn i),
+.super-main :is(.btn i, a.btn i),
+.admin-topbar :is(.btn i, a.btn i),
+.super-topbar :is(.btn i, a.btn i),
+.company-modal :is(.btn i, a.btn i),
+.ledger-modal :is(.btn i, a.btn i) {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.admin-main :is(.company-row-icon, .ledger-row-icon, .mail-icon-btn, .admin-topbar-icon),
+.super-main :is(.company-row-icon, .ledger-row-icon, .super-icon-btn),
+.admin-main .app-table-footer button,
+.super-main .app-table-footer button,
+.admin-main .ledger-table-footer button,
+.super-main .ledger-table-footer button,
+.super-main .all-company-table-pagination button {
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--action-muted-border);
+    border-radius: var(--action-radius);
+    color: var(--action-muted-color);
+    display: inline-flex;
+    font-size: .875rem;
+    font-weight: var(--action-font-weight);
+    height: var(--action-height);
+    justify-content: center;
+    min-width: var(--action-height);
+    padding: 0;
+}
+
+.admin-main :is(.company-row-icon, .ledger-row-icon, .mail-icon-btn, .admin-topbar-icon):hover,
+.super-main :is(.company-row-icon, .ledger-row-icon, .super-icon-btn):hover,
+.admin-main .app-table-footer button:hover:not(:disabled),
+.super-main .app-table-footer button:hover:not(:disabled),
+.admin-main .ledger-table-footer button:hover:not(:disabled),
+.super-main .ledger-table-footer button:hover:not(:disabled),
+.super-main .all-company-table-pagination button:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--action-primary) 30%, var(--action-muted-border));
+    color: var(--action-primary);
+}
+
+.admin-main :is(.app-table-footer button.is-active, .ledger-table-footer button.is-active),
+.super-main :is(.app-table-footer button.is-active, .ledger-table-footer button.is-active, .all-company-table-pagination button.is-active) {
+    background: var(--action-primary);
+    border-color: var(--action-primary);
+    color: var(--action-primary-text);
+}
+
+.admin-main :is(.tenant-panel-link, .company-panel-action),
+.super-main :is(.tenant-panel-link, .company-panel-action) {
+    align-items: center;
+    color: var(--action-primary);
+    display: inline-flex;
+    font-size: var(--action-font-size);
+    font-weight: var(--action-font-weight);
+    gap: var(--action-icon-gap);
+    min-height: var(--action-height);
+    min-width: 0;
+    text-decoration: none;
+    white-space: normal;
+}
+
+.admin-main :is(.d-flex, .ledger-actions, .tenant-overview-actions, .company-profile-actions, .all-company-top-actions, .all-company-filter-actions, .company-filter-actions):has(.btn),
+.super-main :is(.d-flex, .ledger-actions, .tenant-overview-actions, .company-profile-actions, .all-company-top-actions, .all-company-filter-actions, .company-filter-actions):has(.btn) {
+    flex-wrap: wrap;
+    min-width: 0;
+}
+
+.admin-main :is(.super-panel, .company-exact-page, .all-company-page, .tenant-overview-page, .company-panel, .tenant-overview-panel),
+.super-main :is(.super-panel, .company-exact-page, .all-company-page, .tenant-overview-page, .company-panel, .tenant-overview-panel) {
+    min-width: 0;
+}
+
+@media (max-width: 575px) {
+    .admin-main :is(.btn, a.btn),
+    .super-main :is(.btn, a.btn),
+    .admin-form-modal :is(.btn, a.btn),
+    .super-form-modal :is(.btn, a.btn),
+    .company-modal :is(.btn, a.btn),
+    .ledger-modal :is(.btn, a.btn) {
+        width: 100%;
+    }
+
+    .admin-main :is(.d-flex, .ledger-actions, .tenant-overview-actions, .company-profile-actions, .all-company-top-actions):has(.btn),
+    .super-main :is(.d-flex, .ledger-actions, .tenant-overview-actions, .company-profile-actions, .all-company-top-actions):has(.btn) {
+        align-items: stretch;
+    }
+}
+
+@media (max-width: 1399px) {
+    .tenant-overview-stats {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tenant-activity-strip {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 1199px) {
+    .tenant-overview-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .tenant-overview-grid,
+    .tenant-overview-grid.is-small {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1200px) {
+    .tenant-activity-strip {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .all-company-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    .tenant-overview-top,
+    .tenant-overview-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .tenant-overview-stats,
+    .tenant-overview-grid,
+    .tenant-overview-grid.is-small,
+    .tenant-status-content,
+    .tenant-activity-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .tenant-plan-list span {
+        grid-template-columns: 90px 1fr;
+    }
+
+    .tenant-plan-list strong {
+        grid-column: 2;
     }
 }

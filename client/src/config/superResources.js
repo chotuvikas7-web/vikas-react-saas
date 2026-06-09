@@ -4,7 +4,7 @@ const billingModules = ['subscription-payments', 'billing-invoices', 'transactio
 const supportModules = ['support-tickets', 'ticket-categories', 'ticket-assignment', 'ticket-assignments', 'live-chat', 'live-chat-requests', 'contact-requests', 'knowledge-base'];
 const integrationModules = ['payment-gateways', 'sms-gateway', 'email-smtp', 'whatsapp-api', 'google-services', 'webhooks', 'api-keys', 'razorpay', 'stripe', 'paypal'];
 const maintenanceModules = ['backup-management', 'restore-management', 'database-monitoring', 'queue-monitoring', 'cron-jobs', 'cache-management', 'system-updates', 'system-update', 'error-logs'];
-const tenantModules = ['all-companies', 'company-details', 'company-status', 'company-requests', 'company-request', 'suspended-companies', 'suspend-company', 'company-usage', 'company-storage', 'vendor-list'];
+const tenantModules = ['overview', 'all-companies', 'company-details', 'company-status', 'company-requests', 'company-request', 'suspended-companies', 'suspend-company', 'company-usage', 'company-storage', 'vendor-list'];
 
 const configs = {
   plans: {
