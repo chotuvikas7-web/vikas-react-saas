@@ -41,6 +41,7 @@ export function AppLayout({ title, logo, modules, type = 'admin' }) {
   const navigate = useNavigate();
   const location = useLocation();
   const isSuper = type === 'super-admin';
+  const isSuperModulePage = isSuper && location.pathname.includes('/modules/');
   const pageTitle = titleFromPath(location.pathname, title);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -94,10 +95,12 @@ export function AppLayout({ title, logo, modules, type = 'admin' }) {
             <button className="super-profile" type="button"><span>{(user?.name || 'S')[0]}</span><strong>{user?.name || 'Super Admin'}</strong><i className="bi bi-chevron-down" /></button>
           </div>
         </header>
-        <section className="super-page-head">
-          <nav aria-label="breadcrumb"><ol className="breadcrumb mb-1"><li className="breadcrumb-item">Super Admin</li><li className="breadcrumb-item active">{pageTitle}</li></ol></nav>
-          <h1>{pageTitle}</h1>
-        </section>
+        {!isSuperModulePage ? (
+          <section className="super-page-head">
+            <nav aria-label="breadcrumb"><ol className="breadcrumb mb-1"><li className="breadcrumb-item">Super Admin</li><li className="breadcrumb-item active">{pageTitle}</li></ol></nav>
+            <h1>{pageTitle}</h1>
+          </section>
+        ) : null}
         <Outlet />
       </main>
     </div>

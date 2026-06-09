@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { api } from '../../api.js';
+import { DataTable } from '../../components/DataTable.jsx';
 
 const money = (value) => `Rs. ${Number(value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const statusOptions = ['active', 'pending', 'approved', 'completed', 'rejected', 'inactive'];
@@ -97,7 +98,13 @@ export function AdminModuleWorkspace({ moduleKey }) {
         </>
       )}
       <div className="table-panel p-4">
-        <div className="table-responsive"><table className="table align-middle"><thead><tr><th>{titleLabel}</th><th>{referenceLabel}</th><th>{partyLabel}</th><th>{amountLabel}</th><th>Status</th><th>Due</th><th className="text-end">Action</th></tr></thead><tbody>{data.rows.map((row) => <tr key={row.id}><td><strong>{row.title}</strong><br /><small className="text-muted">{String(row.created_at || '').slice(0, 10)}</small></td><td>{row.reference_no || '-'}</td><td>{row.party_name || '-'}</td><td>{row.amount ?? '-'}</td><td><span className={`badge text-bg-${['active', 'approved', 'completed'].includes(row.status) ? 'success' : row.status === 'pending' ? 'warning' : 'secondary'}`}>{row.status}</span></td><td>{row.due_date || '-'}</td><td className="text-end admin-actions-cell"><button className="btn btn-sm btn-outline-secondary admin-action-btn" title="View" aria-label="View" onClick={() => alert(row.description || 'No notes added yet.')}><i className="bi bi-eye" /></button><button className="btn btn-sm btn-outline-primary admin-action-btn" title="Edit" aria-label="Edit" onClick={() => setModalRecord(row)}><i className="bi bi-pencil-square" /></button><button className="btn btn-sm btn-outline-danger admin-action-btn" title="Delete" aria-label="Delete" onClick={() => remove(row)}><i className="bi bi-trash3" /></button></td></tr>)}{!data.rows.length && <tr><td colSpan="7" className="text-center text-muted py-4">No entries yet. Add one from the form.</td></tr>}</tbody></table></div>
+        <DataTable
+          rows={data.rows}
+          columns={['title', 'reference_no', 'party_name', 'amount', 'status', 'due_date']}
+          onView={(row) => alert(row.description || 'No notes added yet.')}
+          onEdit={setModalRecord}
+          onDelete={remove}
+        />
       </div>
     </>
   );

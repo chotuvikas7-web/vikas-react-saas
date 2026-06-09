@@ -15,7 +15,7 @@ const billingModules = ['subscription-payments', 'billing-invoices', 'transactio
 const supportModules = ['support-tickets', 'ticket-categories', 'ticket-assignment', 'ticket-assignments', 'live-chat', 'live-chat-requests', 'contact-requests', 'knowledge-base'];
 const integrationModules = ['payment-gateways', 'sms-gateway', 'email-smtp', 'whatsapp-api', 'google-services', 'webhooks', 'api-keys', 'razorpay', 'stripe', 'paypal'];
 const maintenanceModules = ['backup-management', 'restore-management', 'database-monitoring', 'queue-monitoring', 'cron-jobs', 'cache-management', 'system-updates', 'system-update', 'error-logs'];
-const tenantModules = ['company-details', 'company-status', 'company-requests', 'company-request', 'suspended-companies', 'suspend-company', 'company-usage', 'company-storage', 'vendor-list'];
+const tenantModules = ['all-companies', 'company-details', 'company-status', 'company-requests', 'company-request', 'suspended-companies', 'suspend-company', 'company-usage', 'company-storage', 'vendor-list'];
 
 function sourceForModule(module) {
   if (planModules.includes(module)) return 'plans';
@@ -104,6 +104,82 @@ async function allRows(db, sql, params = []) {
   } catch (error) {
     console.warn(`Super admin query skipped: ${error.message}`);
     return [];
+  }
+}
+
+function slugify(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '') || 'company';
+}
+
+async function columnsFor(db, table) {
+  const [rows] = await db.execute(
+    'SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?',
+    [table]
+  );
+  return new Set(rows.map((row) => row.COLUMN_NAME));
+}
+
+async function tenantPayload(db, body = {}, id = null) {
+  const cols = await columnsFor(db, 'tenants');
+  const name = String(body.company_name || body.record_title || body.title || '').trim();
+  if (!name) {
+    const error = new Error('Company name is required.');
+    error.statusCode = 422;
+    throw error;
+  }
+  const slug = String(body.slug || body.reference || slugify(name)).trim();
+  const payload = {
+    company_name: name,
+    owner_name: body.owner_name || body.owner || '',
+    owner_email: body.owner_email || body.email || '',
+    owner_phone: body.owner_phone || body.phone || '',
+    phone: body.phone || body.owner_phone || '',
+    website: body.website || '',
+    slug,
+    plan_id: body.plan_id || body.plan || null,
+    storage_used_mb: Number(body.storage_used_mb || body.storage || 0),
+    status: body.status || 'active',
+    subscription_ends_at: body.subscription_ends_at || body.due_date || null
+  };
+  if (body.database_name || !id) {
+    payload.database_name = body.database_name || `tenant_${slugify(slug)}_${Date.now()}`;
+  }
+  return Object.fromEntries(Object.entries(payload).filter(([key]) => cols.has(key)));
+}
+
+async function tenantReferences(db) {
+  const [rows] = await db.execute(
+    `SELECT TABLE_NAME, COLUMN_NAME
+     FROM information_schema.KEY_COLUMN_USAGE
+     WHERE TABLE_SCHEMA = DATABASE()
+       AND REFERENCED_TABLE_NAME = 'tenants'
+       AND REFERENCED_COLUMN_NAME = 'id'`
+  );
+  return rows;
+}
+
+async function deleteTenantDependencies(db, tenantId) {
+  const knownOrder = [
+    ['saas_payments', 'tenant_id'],
+    ['support_tickets', 'tenant_id'],
+    ['saas_subscriptions', 'tenant_id']
+  ];
+  const deleted = new Set();
+  for (const [table, column] of knownOrder) {
+    const cols = await columnsFor(db, table);
+    if (cols.has(column)) {
+      await db.execute(`DELETE FROM \`${table}\` WHERE \`${column}\`=?`, [tenantId]);
+      deleted.add(`${table}.${column}`);
+    }
+  }
+  for (const row of await tenantReferences(db)) {
+    const key = `${row.TABLE_NAME}.${row.COLUMN_NAME}`;
+    if (deleted.has(key)) continue;
+    await db.execute(`DELETE FROM \`${row.TABLE_NAME}\` WHERE \`${row.COLUMN_NAME}\`=?`, [tenantId]);
   }
 }
 
@@ -305,8 +381,18 @@ superAdminRouter.get('/modules/:module', asyncHandler(async (req, res) => {
 }));
 
 superAdminRouter.post('/modules/:module', asyncHandler(async (req, res) => {
+  const db = centralDb();
+  if (sourceForModule(req.params.module) === 'tenants') {
+    const payload = await tenantPayload(db, req.body);
+    const keys = Object.keys(payload);
+    await db.execute(
+      `INSERT INTO tenants (${keys.map((key) => `\`${key}\``).join(',')}) VALUES (${keys.map(() => '?').join(',')})`,
+      keys.map((key) => payload[key])
+    );
+    return res.json({ message: 'Company saved.' });
+  }
   const metadata = JSON.stringify(req.body.metadata || {});
-  await centralDb().execute(
+  await db.execute(
     'INSERT INTO platform_module_records (module_key, title, status, description, metadata, created_by) VALUES (?, ?, ?, ?, ?, ?)',
     [req.params.module, req.body.title, req.body.status || 'active', req.body.description || '', metadata, req.user.id]
   );
@@ -314,8 +400,18 @@ superAdminRouter.post('/modules/:module', asyncHandler(async (req, res) => {
 }));
 
 superAdminRouter.put('/modules/:module/:id', asyncHandler(async (req, res) => {
+  const db = centralDb();
+  if (sourceForModule(req.params.module) === 'tenants') {
+    const payload = await tenantPayload(db, req.body, req.params.id);
+    const keys = Object.keys(payload);
+    await db.execute(
+      `UPDATE tenants SET ${keys.map((key) => `\`${key}\`=?`).join(', ')} WHERE id=?`,
+      [...keys.map((key) => payload[key]), req.params.id]
+    );
+    return res.json({ message: 'Company updated.' });
+  }
   const metadata = JSON.stringify(req.body.metadata || {});
-  await centralDb().execute(
+  await db.execute(
     'UPDATE platform_module_records SET title=?, status=?, description=?, metadata=? WHERE id=? AND module_key=?',
     [req.body.title, req.body.status || 'active', req.body.description || '', metadata, req.params.id, req.params.module]
   );
@@ -323,6 +419,12 @@ superAdminRouter.put('/modules/:module/:id', asyncHandler(async (req, res) => {
 }));
 
 superAdminRouter.delete('/modules/:module/:id', asyncHandler(async (req, res) => {
-  await centralDb().execute('DELETE FROM platform_module_records WHERE id=? AND module_key=?', [req.params.id, req.params.module]);
+  const db = centralDb();
+  if (sourceForModule(req.params.module) === 'tenants') {
+    await deleteTenantDependencies(db, req.params.id);
+    await db.execute('DELETE FROM tenants WHERE id=?', [req.params.id]);
+    return res.json({ message: 'Company deleted.' });
+  }
+  await db.execute('DELETE FROM platform_module_records WHERE id=? AND module_key=?', [req.params.id, req.params.module]);
   res.json({ message: 'Deleted.' });
 }));

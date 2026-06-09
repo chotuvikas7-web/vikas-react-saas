@@ -20,6 +20,10 @@ function balanceType(value, fallback = 'Dr') {
   return Number(value || 0) >= 0 ? fallback || 'Dr' : 'Cr';
 }
 
+function ledgerStatus(value) {
+  return String(value || 'active').toLowerCase() === 'inactive' ? 'inactive' : 'active';
+}
+
 function LedgerModal({ record, groups, onClose, onSubmit }) {
   const [form, setForm] = useState(() => ({
     id: record?.id,
@@ -149,12 +153,52 @@ function LedgerModal({ record, groups, onClose, onSubmit }) {
   );
 }
 
+function LedgerViewModal({ ledger, onClose }) {
+  if (!ledger) return null;
+  const current = Math.abs(Number(ledger.opening_balance || 0));
+  return (
+    <>
+      <div className="modal fade ledger-modal show d-block" tabIndex="-1" role="dialog" aria-modal="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h2 className="modal-title">Ledger Details</h2>
+              <button type="button" className="btn-close" onClick={onClose} aria-label="Close" />
+            </div>
+            <div className="modal-body">
+              <div className="ledger-view-grid">
+                <span><small>Ledger Name</small><strong>{ledger.name || '-'}</strong></span>
+                <span><small>Group</small><strong>{ledger.group_name || '-'}</strong></span>
+                <span><small>Nature</small><strong>{titleCase(ledger.nature || '-')}</strong></span>
+                <span><small>Status</small><strong>{titleCase(ledgerStatus(ledger.status))}</strong></span>
+                <span><small>Opening Balance</small><strong>{money(ledger.opening_balance)} {ledger.opening_type || 'Dr'}</strong></span>
+                <span><small>Current Balance</small><strong>{money(current)} {balanceType(ledger.opening_balance, ledger.opening_type)}</strong></span>
+                <span><small>GST Number</small><strong>{ledger.gst_number || '-'}</strong></span>
+                <span><small>Contact</small><strong>{ledger.contact_name || ledger.mobile || '-'}</strong></span>
+                <span className="ledger-view-wide"><small>Description</small><strong>{ledger.notes || ledger.address || '-'}</strong></span>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-outline-secondary" onClick={onClose}>Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="modal-backdrop fade show" />
+    </>
+  );
+}
+
 export function AdminLedgerMaster() {
   const [data, setData] = useState({ rows: [], groups: [] });
   const [q, setQ] = useState('');
   const [tableSearch, setTableSearch] = useState('');
   const [pageSize, setPageSize] = useState(10);
+  const [page, setPage] = useState(1);
   const [modalRecord, setModalRecord] = useState(null);
+  const [viewRecord, setViewRecord] = useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const load = () => api(`/admin/ledger-master?q=${encodeURIComponent(q)}`).then(setData).catch(console.error);
 
@@ -162,13 +206,21 @@ export function AdminLedgerMaster() {
     load();
   }, [q]);
 
-  const visibleRows = useMemo(() => {
+  const filteredRows = useMemo(() => {
     const search = tableSearch.trim().toLowerCase();
-    const rows = search
+    return search
       ? data.rows.filter((row) => [row.name, row.group_name, row.nature, row.gst_number, row.contact_name, row.mobile].some((value) => String(value || '').toLowerCase().includes(search)))
       : data.rows;
-    return rows.slice(0, pageSize);
-  }, [data.rows, tableSearch, pageSize]);
+  }, [data.rows, tableSearch]);
+
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const startIndex = filteredRows.length ? (currentPage - 1) * pageSize : 0;
+  const visibleRows = filteredRows.slice(startIndex, startIndex + pageSize);
+
+  useEffect(() => {
+    setPage(1);
+  }, [tableSearch, pageSize, q]);
 
   const summary = useMemo(() => {
     const opening = data.rows.reduce((sum, row) => sum + Number(row.opening_balance || 0), 0);
@@ -186,12 +238,54 @@ export function AdminLedgerMaster() {
     const path = record.id ? `/admin/ledger-master/${record.id}` : '/admin/ledger-master';
     await api(path, { method, body: JSON.stringify(record) });
     setModalRecord(null);
+    setMessage({ type: 'success', text: record.id ? 'Ledger updated.' : 'Ledger created.' });
     load();
+  };
+
+  const remove = async (ledger) => {
+    if (!confirm(`Delete ledger "${ledger.name}"?`)) return;
+    try {
+      await api(`/admin/ledger-master/${ledger.id}`, { method: 'DELETE' });
+      setOpenMenuId(null);
+      setData((current) => ({ ...current, rows: current.rows.filter((row) => row.id !== ledger.id) }));
+      setMessage({ type: 'success', text: 'Ledger deleted.' });
+    } catch (error) {
+      setMessage({ type: 'danger', text: error.message || 'Unable to delete ledger.' });
+    }
+  };
+
+  const toggleStatus = async (ledger) => {
+    try {
+      const nextStatus = ledgerStatus(ledger.status) === 'inactive' ? 'active' : 'inactive';
+      await api(`/admin/ledger-master/${ledger.id}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          ...ledger,
+          group_id: ledger.group_id,
+          name: ledger.name,
+          opening_balance: ledger.opening_balance || 0,
+          opening_type: ledger.opening_type || 'Dr',
+          contact_name: ledger.contact_name || '',
+          mobile: ledger.mobile || '',
+          email: ledger.email || '',
+          gst_number: ledger.gst_number || '',
+          address: ledger.address || '',
+          notes: ledger.notes || '',
+          status: nextStatus
+        })
+      });
+      setOpenMenuId(null);
+      setData((current) => ({ ...current, rows: current.rows.map((row) => (row.id === ledger.id ? { ...row, status: nextStatus } : row)) }));
+      setMessage({ type: 'success', text: `Ledger ${nextStatus === 'active' ? 'activated' : 'deactivated'}.` });
+    } catch (error) {
+      setMessage({ type: 'danger', text: error.message || 'Unable to change status.' });
+    }
   };
 
   return (
     <>
       <section className="ledger-master-page">
+        {message ? <div className={`alert alert-${message.type} ledger-alert`} role="alert">{message.text}</div> : null}
         <div className="ledger-master-head">
           <div className="ledger-title-wrap">
             <span className="ledger-title-icon"><i className="bi bi-journal-bookmark-fill" /></span>
@@ -238,7 +332,7 @@ export function AdminLedgerMaster() {
             <table className="table ledger-table align-middle">
               <thead>
                 <tr>
-                  {['#', 'Ledger Name', 'Group', 'Nature', 'Opening Balance', 'Current Balance', 'GST', 'Contact', 'Action'].map((heading) => (
+                  {['#', 'Ledger Name', 'Group', 'Nature', 'Status', 'Opening Balance', 'Current Balance', 'GST', 'Contact', 'Action'].map((heading) => (
                     <th key={heading}>{heading}{heading !== '#' && heading !== 'Action' ? <i className="bi bi-chevron-expand" /> : null}</th>
                   ))}
                 </tr>
@@ -250,7 +344,7 @@ export function AdminLedgerMaster() {
                   const current = Math.abs(Number(ledger.opening_balance || 0));
                   return (
                     <tr key={ledger.id}>
-                      <td>{index + 1}</td>
+                      <td>{startIndex + index + 1}</td>
                       <td>
                         <span className={`ledger-name-cell is-${accent}`}>
                           <span><i className={`bi ${index % 3 === 0 ? 'bi-bank2' : index % 3 === 1 ? 'bi-cash-stack' : 'bi-briefcase-fill'}`} /></span>
@@ -259,15 +353,24 @@ export function AdminLedgerMaster() {
                       </td>
                       <td>{ledger.group_name || '-'}</td>
                       <td><span className={`ledger-nature-pill is-${natureClass[nature] || 'asset'}`}>{titleCase(nature || 'asset')}</span></td>
+                      <td><span className={`ledger-status-pill is-${ledgerStatus(ledger.status)}`}>{titleCase(ledgerStatus(ledger.status))}</span></td>
                       <td>{money(ledger.opening_balance)} {ledger.opening_type || 'Dr'}</td>
                       <td className={current > 0 ? 'ledger-positive' : ''}>{money(current)} {balanceType(ledger.opening_balance, ledger.opening_type)}</td>
                       <td>{money(ledger.gst_amount || 0)}</td>
                       <td>{ledger.contact_name || ledger.mobile || '-'}</td>
                       <td>
                         <div className="ledger-actions">
-                          <button className="btn btn-sm btn-outline-primary" type="button"><i className="bi bi-eye-fill" /> View</button>
-                          <button className="btn btn-sm btn-primary" type="button" onClick={() => setModalRecord(ledger)}><i className="bi bi-pencil" /> Edit</button>
-                          <button className="ledger-more-btn" type="button" aria-label="More actions"><i className="bi bi-three-dots-vertical" /></button>
+                          <button className="ledger-more-btn" type="button" aria-label={`Actions for ${ledger.name}`} onClick={() => setOpenMenuId((id) => (id === ledger.id ? null : ledger.id))}>
+                            <i className="bi bi-three-dots-vertical" />
+                          </button>
+                          {openMenuId === ledger.id ? (
+                            <div className="ledger-action-menu">
+                              <button type="button" onClick={() => { setViewRecord(ledger); setOpenMenuId(null); }}><i className="bi bi-eye" /><span>View</span></button>
+                              <button type="button" onClick={() => { setModalRecord(ledger); setOpenMenuId(null); }}><i className="bi bi-pencil" /><span>Edit</span></button>
+                              <button type="button" onClick={() => toggleStatus(ledger)}><i className={`bi ${ledgerStatus(ledger.status) === 'inactive' ? 'bi-toggle-off' : 'bi-toggle-on'}`} /><span>{ledgerStatus(ledger.status) === 'inactive' ? 'Activate' : 'Deactivate'}</span></button>
+                              <button type="button" onClick={() => remove(ledger)}><i className="bi bi-trash3" /><span>Delete</span></button>
+                            </div>
+                          ) : null}
                         </div>
                       </td>
                     </tr>
@@ -277,19 +380,20 @@ export function AdminLedgerMaster() {
             </table>
           </div>
           <div className="ledger-table-footer">
-            <span>Showing 1 to {visibleRows.length} of {data.rows.length} entries</span>
+            <span>Showing {filteredRows.length ? startIndex + 1 : 0} to {startIndex + visibleRows.length} of {filteredRows.length} entries</span>
             <nav aria-label="Ledger pagination">
-              <button type="button"><i className="bi bi-chevron-double-left" /></button>
-              <button type="button"><i className="bi bi-chevron-left" /></button>
-              <button className="is-active" type="button">1</button>
-              <button type="button"><i className="bi bi-chevron-right" /></button>
-              <button type="button"><i className="bi bi-chevron-double-right" /></button>
+              <button type="button" disabled={currentPage === 1} onClick={() => setPage(1)}><i className="bi bi-chevron-double-left" /></button>
+              <button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))}><i className="bi bi-chevron-left" /></button>
+              <button className="is-active" type="button">{currentPage}</button>
+              <button type="button" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}><i className="bi bi-chevron-right" /></button>
+              <button type="button" disabled={currentPage === pageCount} onClick={() => setPage(pageCount)}><i className="bi bi-chevron-double-right" /></button>
             </nav>
           </div>
         </div>
       </section>
 
       {modalRecord ? <LedgerModal record={modalRecord} groups={data.groups} onClose={() => setModalRecord(null)} onSubmit={save} /> : null}
+      {viewRecord ? <LedgerViewModal ledger={viewRecord} onClose={() => setViewRecord(null)} /> : null}
     </>
   );
 }

@@ -6,6 +6,10 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 export const authRouter = express.Router();
 
+function databaseUnavailable(error) {
+  return ['ECONNREFUSED', 'ER_BAD_DB_ERROR', 'PROTOCOL_CONNECTION_LOST'].includes(error?.code);
+}
+
 authRouter.post('/admin/login', asyncHandler(async (req, res) => {
   const { email, password, tenant } = req.body;
   let database = databaseNameForTenant(tenant);
@@ -28,7 +32,15 @@ authRouter.post('/admin/login', asyncHandler(async (req, res) => {
 
 authRouter.post('/super-admin/login', asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const [rows] = await centralDb().execute("SELECT * FROM super_admins WHERE email = ? AND status = 'active' LIMIT 1", [email]);
+  let rows = [];
+  try {
+    [rows] = await centralDb().execute("SELECT * FROM super_admins WHERE email = ? AND status = 'active' LIMIT 1", [email]);
+  } catch (error) {
+    if (databaseUnavailable(error)) {
+      return res.status(503).json({ message: 'Database server is not running. Please start XAMPP MySQL and try again.' });
+    }
+    throw error;
+  }
   const admin = rows[0];
   if (!admin || !bcrypt.compareSync(password || '', admin.password_hash)) {
     return res.status(401).json({ message: 'Invalid super admin email or password.' });

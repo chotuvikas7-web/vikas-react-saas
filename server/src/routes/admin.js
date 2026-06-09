@@ -525,13 +525,21 @@ adminRouter.post('/products/:id/stock', asyncHandler(async (req, res) => {
   res.json({ message: 'Stock ledger updated.' });
 }));
 
+adminRouter.post('/ledger-master/:id/toggle', asyncHandler(async (req, res) => {
+  const db = tenantDb(req.user.database);
+  await db.execute("UPDATE accounting_ledgers SET status = IF(LOWER(COALESCE(status,'active'))='active','inactive','active') WHERE id=?", [req.params.id]);
+  const [[row]] = await db.execute('SELECT status FROM accounting_ledgers WHERE id=? LIMIT 1', [req.params.id]);
+  res.json({ message: 'Status changed.', status: row?.status || 'active' });
+}));
+
 adminRouter.post('/:resource/:id/toggle', asyncHandler(async (req, res) => {
   const db = tenantDb(req.user.database);
   const resource = req.params.resource;
-  const table = { clients: 'clients', suppliers: 'suppliers', categories: 'categories', products: 'products' }[resource];
+  const table = { clients: 'clients', suppliers: 'suppliers', categories: 'categories', products: 'products', 'ledger-master': 'accounting_ledgers', ledgers: 'accounting_ledgers' }[resource];
   if (!table) return res.status(404).json({ message: 'Resource not found.' });
-  await db.execute(`UPDATE \`${table}\` SET status = IF(COALESCE(status,'active')='active','inactive','active') WHERE id=?`, [req.params.id]);
-  res.json({ message: 'Status changed.' });
+  await db.execute(`UPDATE \`${table}\` SET status = IF(LOWER(COALESCE(status,'active'))='active','inactive','active') WHERE id=?`, [req.params.id]);
+  const [[row]] = await db.execute(`SELECT status FROM \`${table}\` WHERE id=? LIMIT 1`, [req.params.id]);
+  res.json({ message: 'Status changed.', status: row?.status || 'active' });
 }));
 
 for (const resource of ['clients', 'suppliers']) {
@@ -672,6 +680,19 @@ adminRouter.put('/ledger-master/:id', asyncHandler(async (req, res) => {
   const body = req.body;
   await db.execute('UPDATE accounting_ledgers SET group_id=?, name=?, opening_balance=?, opening_type=?, contact_name=?, mobile=?, email=?, gst_number=?, address=?, notes=?, status=? WHERE id=?', [body.group_id, body.name, Number(body.opening_balance || 0), body.opening_type || 'Dr', body.contact_name || '', body.mobile || '', body.email || '', body.gst_number || '', body.address || '', body.notes || '', body.status || 'active', req.params.id]);
   res.json({ message: 'Ledger updated.' });
+}));
+
+adminRouter.delete('/ledger-master/:id', asyncHandler(async (req, res) => {
+  const db = tenantDb(req.user.database);
+  try {
+    await db.execute('DELETE FROM accounting_ledgers WHERE id=?', [req.params.id]);
+  } catch (error) {
+    if (error?.code === 'ER_ROW_IS_REFERENCED_2' || error?.code === 'ER_ROW_IS_REFERENCED') {
+      return res.status(409).json({ message: 'This ledger has transactions. Deactivate it instead of deleting.' });
+    }
+    throw error;
+  }
+  res.json({ message: 'Ledger deleted.' });
 }));
 
 const moduleConfig = {
