@@ -42,7 +42,15 @@ const childIcon = (label) => ({
   Settings: 'bi-sliders',
   Themes: 'bi-moon-stars',
   'Support Tickets': 'bi-ticket-detailed',
-  'Live Chat Requests': 'bi-chat-dots'
+  'Live Chat Requests': 'bi-chat-dots',
+  Overview: 'bi-house-door',
+  'All Companies': 'bi-grid',
+  'Company Status': 'bi-bar-chart-line',
+  'Company Requests': 'bi-person-plus',
+  'Suspended Companies': 'bi-slash-circle',
+  'Company Usage': 'bi-pie-chart',
+  'Company Storage': 'bi-hdd',
+  'Company Details': 'bi-person'
 }[label] || 'bi-dot');
 
 const matchesPath = (pathname, path) => pathname === path || (!['/admin', '/super-admin'].includes(path) && pathname.startsWith(`${path}/`));

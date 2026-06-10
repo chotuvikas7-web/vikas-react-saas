@@ -1,0 +1,282 @@
+- generic [ref=e15]:
+  - complementary [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: VE
+      - generic [ref=e19]:
+        - strong [ref=e20]: Vikas ERP
+        - generic [ref=e21]: Super Admin
+    - navigation [ref=e22]:
+      - link " Dashboard" [ref=e23] [cursor=pointer]:
+        - /url: /super-admin
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Dashboard
+      - generic [ref=e26]:
+        - button " Email " [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: 
+            - text: Email
+          - generic [ref=e30]: 
+        - text: 
+      - generic [ref=e31]:
+        - button " Tenant Management " [expanded] [ref=e32] [cursor=pointer]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: 
+            - text: Tenant Management
+          - generic [ref=e35]: 
+        - generic [ref=e415]:
+          - link " Overview" [ref=e416] [cursor=pointer]:
+            - /url: /super-admin/modules/overview
+            - generic [ref=e417]: 
+            - generic [ref=e418]: Overview
+          - link " All Companies" [active] [ref=e419] [cursor=pointer]:
+            - /url: /super-admin/modules/all-companies
+            - generic [ref=e420]: 
+            - generic [ref=e421]: All Companies
+          - link " Company Status" [ref=e422] [cursor=pointer]:
+            - /url: /super-admin/modules/company-status
+            - generic [ref=e423]: 
+            - generic [ref=e424]: Company Status
+          - link " Company Details" [ref=e425] [cursor=pointer]:
+            - /url: /super-admin/modules/company-details
+            - generic [ref=e426]: 
+            - generic [ref=e427]: Company Details
+          - link " Company Requests" [ref=e428] [cursor=pointer]:
+            - /url: /super-admin/modules/company-requests
+            - generic [ref=e429]: 
+            - generic [ref=e430]: Company Requests
+          - link " Suspended Companies" [ref=e431] [cursor=pointer]:
+            - /url: /super-admin/modules/suspended-companies
+            - generic [ref=e432]: 
+            - generic [ref=e433]: Suspended Companies
+          - link " Company Usage" [ref=e434] [cursor=pointer]:
+            - /url: /super-admin/modules/company-usage
+            - generic [ref=e435]: 
+            - generic [ref=e436]: Company Usage
+          - link " Company Storage" [ref=e437] [cursor=pointer]:
+            - /url: /super-admin/modules/company-storage
+            - generic [ref=e438]: 
+            - generic [ref=e439]: Company Storage
+      - generic [ref=e36]:
+        - button " Subscriptions " [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: 
+            - text: Subscriptions
+          - generic [ref=e40]: 
+        - text:       
+      - generic [ref=e41]:
+        - button " Plans & Features " [ref=e42] [cursor=pointer]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: 
+            - text: Plans & Features
+          - generic [ref=e45]: 
+        - text:           
+      - generic [ref=e46]:
+        - button " Users " [ref=e47] [cursor=pointer]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: 
+            - text: Users
+          - generic [ref=e50]: 
+        - text:        
+      - generic [ref=e51]:
+        - button " Renewals & Billings " [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: 
+            - text: Renewals & Billings
+          - generic [ref=e55]: 
+        - text:      
+      - generic [ref=e56]:
+        - button " Support Center " [ref=e57] [cursor=pointer]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: 
+            - text: Support Center
+          - generic [ref=e60]: 
+        - text:      
+      - generic [ref=e61]:
+        - button " Vendor Management " [ref=e62] [cursor=pointer]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: 
+            - text: Vendor Management
+          - generic [ref=e65]: 
+        - text:      
+      - generic [ref=e66]:
+        - button " Integration " [ref=e67] [cursor=pointer]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: 
+            - text: Integration
+          - generic [ref=e70]: 
+        - text:          
+      - generic [ref=e71]:
+        - button " Reports & Analytics " [ref=e72] [cursor=pointer]:
+          - generic [ref=e73]:
+            - generic [ref=e74]: 
+            - text: Reports & Analytics
+          - generic [ref=e75]: 
+        - text:       
+      - generic [ref=e76]:
+        - button " Security " [ref=e77] [cursor=pointer]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: 
+            - text: Security
+          - generic [ref=e80]: 
+        - text:        
+      - generic [ref=e81]:
+        - button " System Settings " [ref=e82] [cursor=pointer]:
+          - generic [ref=e83]:
+            - generic [ref=e84]: 
+            - text: System Settings
+          - generic [ref=e85]: 
+        - text:        
+      - generic [ref=e86]:
+        - button " Maintenance " [ref=e87] [cursor=pointer]:
+          - generic [ref=e88]:
+            - generic [ref=e89]: 
+            - text: Maintenance
+          - generic [ref=e90]: 
+        - text:        
+      - button " Logout" [ref=e91] [cursor=pointer]:
+        - generic [ref=e92]: 
+        - generic [ref=e93]: Logout
+  - main [ref=e94]:
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - text: 
+        - button "" [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]: 
+        - generic [ref=e99] [cursor=pointer]:
+          - generic [ref=e100]: 
+          - generic [ref=e101]: Search tenants, billing, tickets...
+          - generic [ref=e102]: Ctrl K
+      - generic [ref=e103]:
+        - button "" [ref=e104] [cursor=pointer]:
+          - generic [ref=e105]: 
+        - button "" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: 
+        - button "S Super Admin " [ref=e109] [cursor=pointer]:
+          - generic [ref=e110]: S
+          - strong [ref=e111]: Super Admin
+          - generic [ref=e112]: 
+    - generic [ref=e694]:
+      - generic [ref=e695]:
+        - navigation "breadcrumb" [ref=e696]:
+          - generic [ref=e697]: Tenant Management
+          - generic [ref=e698]: 
+          - strong [ref=e699]: All Companies
+        - generic [ref=e700]:
+          - generic [ref=e701]:
+            - heading "All Companies" [level=1] [ref=e702]
+            - paragraph [ref=e703]: Manage and view all registered companies on the platform.
+          - generic [ref=e704]:
+            - button " Export" [ref=e705] [cursor=pointer]:
+              - generic [ref=e706]: 
+              - text: Export
+            - button " Add Company" [ref=e707] [cursor=pointer]:
+              - generic [ref=e708]: 
+              - text: Add Company
+      - generic [ref=e709]:
+        - article [ref=e710]:
+          - generic [ref=e711]: 
+          - generic [ref=e712]: Total Companies
+          - strong [ref=e713]: "0"
+          - generic [ref=e714]: 100% of total
+        - article [ref=e715]:
+          - generic [ref=e716]: 
+          - generic [ref=e717]: Active Companies
+          - strong [ref=e718]: "0"
+          - generic [ref=e719]: Active on platform
+        - article [ref=e720]:
+          - generic [ref=e721]: 
+          - generic [ref=e722]: Trial Companies
+          - strong [ref=e723]: "0"
+          - generic [ref=e724]: Trial accounts
+        - article [ref=e725]:
+          - generic [ref=e726]: 
+          - generic [ref=e727]: Suspended Companies
+          - strong [ref=e728]: "0"
+          - generic [ref=e729]: Suspended accounts
+        - article [ref=e730]:
+          - generic [ref=e731]: 
+          - generic [ref=e732]: Expired Companies
+          - strong [ref=e733]: "0"
+          - generic [ref=e734]: Inactive accounts
+        - article [ref=e735]:
+          - generic [ref=e736]: 
+          - generic [ref=e737]: Pending Approval
+          - strong [ref=e738]: "0"
+          - generic [ref=e739]: Awaiting approval
+      - generic [ref=e740]:
+        - generic [ref=e741]:
+          - generic [ref=e742]: Search
+          - generic [ref=e743]:
+            - textbox "Search " [ref=e744]:
+              - /placeholder: Search by company name, owner, email...
+            - generic [ref=e745]: 
+        - generic [ref=e746]:
+          - generic [ref=e747]: Status
+          - combobox "Status" [ref=e748]:
+            - option "All Status" [selected]
+            - option "Active"
+            - option "Trial"
+            - option "Suspended"
+            - option "Inactive"
+        - generic [ref=e749]:
+          - generic [ref=e750]: Plan
+          - combobox "Plan" [ref=e751]:
+            - option "All Plans" [selected]
+            - option "Basic"
+            - option "Professional"
+            - option "Enterprise"
+        - generic [ref=e752]:
+          - generic [ref=e753]: Owner
+          - combobox "Owner" [ref=e754]:
+            - option "All Owners" [selected]
+        - generic [ref=e755]:
+          - generic [ref=e756]: Date Range
+          - textbox "Date Range" [ref=e757]: 01 May 2024 - 07 May 2024
+        - generic [ref=e758]:
+          - button " Filters" [ref=e759] [cursor=pointer]:
+            - generic [ref=e760]: 
+            - text: Filters
+          - button " Reset" [ref=e761] [cursor=pointer]:
+            - generic [ref=e762]: 
+            - text: Reset
+      - generic [ref=e763]:
+        - generic [ref=e764]:
+          - heading "Companies (0)" [level=2] [ref=e765]
+          - generic [ref=e766]:
+            - button " Columns" [ref=e767] [cursor=pointer]:
+              - generic [ref=e768]: 
+              - text: Columns
+            - button " Export" [ref=e769] [cursor=pointer]:
+              - generic [ref=e770]: 
+              - text: Export
+        - generic [ref=e772]:
+          - generic [ref=e773]: Show
+          - combobox "Entries per page" [ref=e774]:
+            - option "10" [selected]
+            - option "25"
+            - option "50"
+          - generic [ref=e775]: entries
+        - table [ref=e777]:
+          - rowgroup [ref=e789]:
+            - row "Company Owner Plan Status Users Storage Used Last Login Subscription Ends Actions" [ref=e790]:
+              - columnheader [ref=e791]
+              - columnheader "Company" [ref=e792]
+              - columnheader "Owner" [ref=e793]
+              - columnheader "Plan" [ref=e794]
+              - columnheader "Status" [ref=e795]
+              - columnheader "Users" [ref=e796]
+              - columnheader "Storage Used" [ref=e797]
+              - columnheader "Last Login" [ref=e798]
+              - columnheader "Subscription Ends" [ref=e799]
+              - columnheader "Actions" [ref=e800]
+          - rowgroup [ref=e801]:
+            - row "No companies found." [ref=e802]:
+              - cell "No companies found." [ref=e803]
+        - generic [ref=e804]:
+          - generic [ref=e805]: Showing 0 to 0 of 0 entries
+          - navigation "Companies pagination" [ref=e806]:
+            - button "Previous page" [disabled] [ref=e807]:
+              - generic [ref=e808]: 
+            - button "1" [ref=e809] [cursor=pointer]
+            - button "Next page" [disabled] [ref=e810]:
+              - generic [ref=e811]: 

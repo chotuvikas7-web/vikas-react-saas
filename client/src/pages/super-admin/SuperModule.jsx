@@ -120,11 +120,34 @@ const companyPlans = [
   { value: '2', label: 'Professional' },
   { value: '3', label: 'Enterprise' }
 ];
-const companyStatuses = ['active', 'trial', 'suspended', 'inactive'];
+const companyStatuses = ['active', 'trial', 'suspended', 'inactive', 'pending'];
 const companyStatusCount = (rows, status) => rows.filter((row) => companyStatus(row.status) === status).length;
 const companyPlanLabel = (value, name) => name || companyPlans.find((plan) => String(plan.value) === String(value))?.label || titleize(String(value || 'Basic'));
+const cleanPlanValue = (value) => String(value || '').trim().toLowerCase();
+const companyPlanMatches = (row, selectedPlan) => {
+  if (!selectedPlan) return true;
+  const selected = companyPlans.find((item) => String(item.value) === String(selectedPlan));
+  const selectedValues = [selectedPlan, selected?.label].map(cleanPlanValue).filter(Boolean);
+  const rowValues = [
+    row.plan_id,
+    row.plan,
+    row.plan_name,
+    row.plan_label,
+    row.subscription_plan,
+    row.package_name,
+    companyPlanLabel(row.plan_id || row.plan, row.plan_name || row.plan_label)
+  ].map(cleanPlanValue).filter(Boolean);
+  return selectedValues.some((value) => rowValues.includes(value));
+};
 const companyDate = (value) => (value ? new Date(value).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '-');
 const companyStorage = (value) => `${(Number(value || 0) / 1024).toFixed(2)} GB`;
+const companyInitials = (value) => String(value || 'CO').split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase() || 'CO';
+const percentOf = (value, total) => total ? `${((Number(value || 0) / total) * 100).toFixed(2)}% of total` : '0% of total';
+const requestStatus = (row) => {
+  const value = String(row.request_status || row.approval_status || row.application_status || row.status || 'pending').toLowerCase();
+  if (['approved', 'rejected', 'pending'].includes(value)) return value;
+  return 'pending';
+};
 const metaFrom = (row) => {
   if (!row?.metadata) return {};
   try {
@@ -368,7 +391,7 @@ function CompanyDetailsScreen({ rows, load }) {
     const haystack = JSON.stringify(row).toLowerCase();
     return (!query || haystack.includes(query.toLowerCase()))
       && (!status || companyStatus(row.status) === status)
-      && (!plan || String(row.plan_id || '').toLowerCase() === plan);
+      && companyPlanMatches(row, plan);
   }), [companies, plan, query, status]);
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const currentPage = Math.min(page, pageCount);
@@ -700,6 +723,7 @@ function AllCompaniesScreen({ rows, load }) {
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('');
   const [plan, setPlan] = useState('');
+  const [viewMode, setViewMode] = useState('table');
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [menuId, setMenuId] = useState(null);
@@ -711,7 +735,7 @@ function AllCompaniesScreen({ rows, load }) {
     const haystack = JSON.stringify(row).toLowerCase();
     return (!query || haystack.includes(query.toLowerCase()))
       && (!status || companyStatus(row.status) === status)
-      && (!plan || String(row.plan_id || '').toLowerCase() === plan);
+      && companyPlanMatches(row, plan);
   }), [companies, plan, query, status]);
   const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
   const currentPage = Math.min(page, pageCount);
@@ -789,14 +813,16 @@ function AllCompaniesScreen({ rows, load }) {
         <label><span>Search</span><div className="company-search"><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by company name, owner, email..." /><i className="bi bi-search" /></div></label>
         <label><span>Status</span><select className="form-select" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">All Status</option>{companyStatuses.map((item) => <option key={item} value={item}>{titleize(item)}</option>)}</select></label>
         <label><span>Plan</span><select className="form-select" value={plan} onChange={(event) => setPlan(event.target.value)}><option value="">All Plans</option>{companyPlans.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
-        <label><span>Owner</span><select className="form-select"><option>All Owners</option></select></label>
         <label><span>Date Range</span><input className="form-control" type="text" value="01 May 2024 - 07 May 2024" readOnly /></label>
         <div className="all-company-filter-actions"><button className="btn btn-outline-secondary btn-sm" type="button"><i className="bi bi-funnel" /> Filters</button><button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => { setQuery(''); setStatus(''); setPlan(''); }}><i className="bi bi-arrow-counterclockwise" /> Reset</button></div>
       </div>
       <div className="all-company-table-panel">
         <div className="all-company-table-head">
           <h2>Companies ({filteredRows.length})</h2>
-          <div><button className="btn btn-outline-secondary btn-sm" type="button"><i className="bi bi-gear" /> Columns</button><button className="btn btn-outline-secondary btn-sm" type="button"><i className="bi bi-download" /> Export</button></div>
+          <div className="company-view-toggle" role="group" aria-label="View mode">
+            <button className={viewMode === 'table' ? 'is-active' : ''} type="button" onClick={() => setViewMode('table')}><i className="bi bi-table" /> Table View</button>
+            <button className={viewMode === 'grid' ? 'is-active' : ''} type="button" onClick={() => setViewMode('grid')}><i className="bi bi-grid" /> Grid View</button>
+          </div>
         </div>
         <div className="app-table-toolbar">
           <div className="app-table-length">
@@ -808,67 +834,95 @@ function AllCompaniesScreen({ rows, load }) {
           </div>
         </div>
         <div className="all-company-table-scroll table-responsive app-table-responsive">
-          <table className="table admin-data-table all-company-table align-middle">
-            <colgroup>
-              <col style={{ width: '44px' }} />
-              <col style={{ width: '200px' }} />
-              <col style={{ width: '170px' }} />
-              <col style={{ width: '110px' }} />
-              <col style={{ width: '100px' }} />
-              <col style={{ width: '80px' }} />
-              <col style={{ width: '150px' }} />
-              <col style={{ width: '120px' }} />
-              <col style={{ width: '140px' }} />
-              <col style={{ width: '96px' }} />
-            </colgroup>
-            <thead>
-              <tr>
-                <th className="all-company-check" />
-                <th>Company</th>
-                <th>Owner</th>
-                <th>Plan</th>
-                <th>Status</th>
-                <th>Users</th>
-                <th>Storage Used</th>
-                <th>Last Login</th>
-                <th className="all-company-cell-subscription">Subscription Ends</th>
-                <th className="all-company-cell-actions">Actions</th>
-              </tr>
-            </thead>
-            <tbody>{visibleRows.length ? visibleRows.map((row) => {
-              const rowStatus = companyStatus(row.status);
-              const initials = String(row.company_name || 'CO').split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
-              const storage = Number(row.storage_used_mb || 0) / 1024;
-              const storagePct = Math.min(100, Math.max(4, Math.round((storage / 100) * 100)));
-              const subscriptionEnds = row.subscription_ends_at || row.due_date || row.trial_ends_at;
-              return (
-                <tr key={row.id}>
-                  <td className="all-company-check"><input type="checkbox" aria-label={`Select ${row.company_name || row.title}`} /></td>
-                  <td className="all-company-cell-name"><div className="all-company-name"><span>{initials}</span><div><strong>{row.company_name || row.title}</strong><small>{row.owner_email || '-'}</small></div></div></td>
-                  <td className="all-company-cell-owner"><strong>{row.owner_name || row.owner || '-'}</strong><small>{row.owner_email || '-'}</small></td>
-                  <td><span className="company-plan-pill">{companyPlanLabel(row.plan_id, row.plan_name)}</span></td>
-                  <td><span className={`company-status-pill is-${rowStatus}`}>{titleize(rowStatus)}</span></td>
-                  <td className="all-company-cell-users"><i className="bi bi-people" /> {row.users_count || row.user_count || 25}</td>
-                  <td className="all-company-cell-storage"><div className="all-company-storage"><span>{storage.toFixed(2)} GB</span><div><b style={{ width: `${storagePct}%` }} /></div><small>{storagePct}% used</small></div></td>
-                  <td className="all-company-cell-date">{row.last_login_at ? companyDate(row.last_login_at) : '-'}</td>
-                  <td className="all-company-cell-subscription"><span className="all-company-date-text">{companyDate(subscriptionEnds)}</span></td>
-                  <td className="all-company-cell-actions">
-                    <div className="all-company-row-actions">
-                      <button className="company-row-icon" type="button" aria-label="Row actions" onClick={() => setMenuId(menuId === row.id ? null : row.id)}><i className="bi bi-three-dots-vertical" /></button>
-                      {menuId === row.id ? (
-                        <div className="company-action-menu">
-                          <button type="button" onClick={() => navigate(`/super-admin/modules/company-details?company=${row.id}`)}><i className="bi bi-eye" /> View</button>
-                          <button type="button" onClick={() => { setFormRecord(row); setMenuId(null); }}><i className="bi bi-pencil" /> Edit</button>
-                          <button type="button" onClick={() => toggleStatus(row)}><i className={`bi ${rowStatus === 'active' ? 'bi-toggle-on' : 'bi-toggle-off'}`} /> {rowStatus === 'active' ? 'Suspend' : 'Activate'}</button>
-                          <button type="button" onClick={() => remove(row)}><i className="bi bi-trash3" /> Delete</button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </td>
+          {viewMode === 'table' ? (
+            <table className="table admin-data-table all-company-table align-middle">
+              <colgroup>
+                <col style={{ width: '44px' }} />
+                <col style={{ width: '200px' }} />
+                <col style={{ width: '170px' }} />
+                <col style={{ width: '110px' }} />
+                <col style={{ width: '100px' }} />
+                <col style={{ width: '80px' }} />
+                <col style={{ width: '150px' }} />
+                <col style={{ width: '120px' }} />
+                <col style={{ width: '140px' }} />
+                <col style={{ width: '96px' }} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th className="all-company-check" />
+                  <th>Company</th>
+                  <th>Owner</th>
+                  <th>Plan</th>
+                  <th>Status</th>
+                  <th>Users</th>
+                  <th>Storage Used</th>
+                  <th>Last Login</th>
+                  <th className="all-company-cell-subscription">Subscription Ends</th>
+                  <th className="all-company-cell-actions">Actions</th>
                 </tr>
-              );
-            }) : <tr><td colSpan={10} className="text-center text-muted py-4">No companies found.</td></tr>}</tbody>
-          </table>
+              </thead>
+              <tbody>{visibleRows.length ? visibleRows.map((row) => {
+                const rowStatus = companyStatus(row.status);
+                const initials = companyInitials(row.company_name || row.title);
+                const storage = Number(row.storage_used_mb || 0) / 1024;
+                const storagePct = Math.min(100, Math.max(4, Math.round((storage / 100) * 100)));
+                const subscriptionEnds = row.subscription_ends_at || row.due_date || row.trial_ends_at;
+                return (
+                  <tr key={row.id}>
+                    <td className="all-company-check"><input type="checkbox" aria-label={`Select ${row.company_name || row.title}`} /></td>
+                    <td className="all-company-cell-name"><div className="all-company-name"><span>{initials}</span><div><strong>{row.company_name || row.title}</strong><small>{row.owner_email || '-'}</small></div></div></td>
+                    <td className="all-company-cell-owner"><strong>{row.owner_name || row.owner || '-'}</strong><small>{row.owner_email || '-'}</small></td>
+                    <td><span className="company-plan-pill">{companyPlanLabel(row.plan_id, row.plan_name)}</span></td>
+                    <td><span className={`company-status-pill is-${rowStatus}`}>{titleize(rowStatus)}</span></td>
+                    <td className="all-company-cell-users"><i className="bi bi-people" /> {row.users_count || row.user_count || 25}</td>
+                    <td className="all-company-cell-storage"><div className="all-company-storage"><span>{storage.toFixed(2)} GB</span><div><b style={{ width: `${storagePct}%` }} /></div><small>{storagePct}% used</small></div></td>
+                    <td className="all-company-cell-date">{row.last_login_at ? companyDate(row.last_login_at) : '-'}</td>
+                    <td className="all-company-cell-subscription"><span className="all-company-date-text">{companyDate(subscriptionEnds)}</span></td>
+                    <td className="all-company-cell-actions">
+                      <div className="all-company-row-actions">
+                        <button className="company-row-icon" type="button" aria-label="Row actions" onClick={() => setMenuId(menuId === row.id ? null : row.id)}><i className="bi bi-three-dots-vertical" /></button>
+                        {menuId === row.id ? (
+                          <div className="company-action-menu">
+                            <button type="button" onClick={() => navigate(`/super-admin/modules/company-details?company=${row.id}`)}><i className="bi bi-eye" /> View</button>
+                            <button type="button" onClick={() => { setFormRecord(row); setMenuId(null); }}><i className="bi bi-pencil" /> Edit</button>
+                            <button type="button" onClick={() => toggleStatus(row)}><i className={`bi ${rowStatus === 'active' ? 'bi-toggle-on' : 'bi-toggle-off'}`} /> {rowStatus === 'active' ? 'Suspend' : 'Activate'}</button>
+                            <button type="button" onClick={() => remove(row)}><i className="bi bi-trash3" /> Delete</button>
+                          </div>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              }) : <tr><td colSpan={10} className="text-center text-muted py-4">No companies found.</td></tr>}</tbody>
+            </table>
+          ) : (
+            <div className="company-status-grid all-company-grid">
+              {visibleRows.length ? visibleRows.map((row) => {
+                const rowStatus = companyStatus(row.status);
+                const storage = Number(row.storage_used_mb || 0) / 1024;
+                const subscriptionEnds = row.subscription_ends_at || row.due_date || row.trial_ends_at;
+                return (
+                  <article key={row.id} className="company-status-card all-company-grid-card">
+                    <div className="all-company-name"><span>{companyInitials(row.company_name || row.title)}</span><div><strong>{row.company_name || row.title}</strong><small>{row.owner_email || '-'}</small></div></div>
+                    <div className="all-company-grid-meta">
+                      <span><small>Owner</small><strong>{row.owner_name || row.owner || '-'}</strong></span>
+                      <span><small>Users</small><strong>{row.users_count || row.user_count || 25}</strong></span>
+                      <span><small>Storage</small><strong>{storage.toFixed(2)} GB</strong></span>
+                      <span><small>Ends</small><strong>{companyDate(subscriptionEnds)}</strong></span>
+                    </div>
+                    <div className="all-company-grid-tags"><span className="company-plan-pill">{companyPlanLabel(row.plan_id, row.plan_name)}</span><span className={`company-status-pill is-${rowStatus}`}>{titleize(rowStatus)}</span></div>
+                    <div className="all-company-grid-actions">
+                      <button className="company-row-icon" type="button" aria-label="View company" onClick={() => navigate(`/super-admin/modules/company-details?company=${row.id}`)}><i className="bi bi-eye" /></button>
+                      <button className="company-row-icon" type="button" aria-label="Edit company" onClick={() => setFormRecord(row)}><i className="bi bi-pencil" /></button>
+                      <button className="company-row-icon" type="button" aria-label={rowStatus === 'active' ? 'Suspend company' : 'Activate company'} onClick={() => toggleStatus(row)}><i className={`bi ${rowStatus === 'active' ? 'bi-toggle-on' : 'bi-toggle-off'}`} /></button>
+                      <button className="company-row-icon" type="button" aria-label="Delete company" onClick={() => remove(row)}><i className="bi bi-trash3" /></button>
+                    </div>
+                  </article>
+                );
+              }) : <p className="text-center text-muted mb-0 py-4">No companies found.</p>}
+            </div>
+          )}
         </div>
         <div className="app-table-footer all-company-table-footer">
           <span className="all-company-table-summary">Showing {filteredRows.length ? startIndex + 1 : 0} to {startIndex + visibleRows.length} of {filteredRows.length} entries</span>
@@ -881,6 +935,342 @@ function AllCompaniesScreen({ rows, load }) {
       </div>
       <CompanyFormModal record={formRecord} onClose={() => setFormRecord(null)} onSubmit={save} />
       <CompanyViewModal record={viewRecord} onClose={() => setViewRecord(null)} />
+    </section>
+  );
+}
+
+function CompanyStatusScreen({ rows, load }) {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState('');
+  const [status, setStatus] = useState('');
+  const [plan, setPlan] = useState('');
+  const [viewMode, setViewMode] = useState('table');
+  const [pageSize, setPageSize] = useState(5);
+  const [page, setPage] = useState(1);
+  const [menuId, setMenuId] = useState(null);
+  const [formRecord, setFormRecord] = useState(null);
+  const [viewRecord, setViewRecord] = useState(null);
+  const [message, setMessage] = useState(null);
+  const companies = useMemo(() => rows.filter((row) => !row.module_key), [rows]);
+  const filteredRows = useMemo(() => companies.filter((row) => {
+    const haystack = JSON.stringify(row).toLowerCase();
+    return (!query || haystack.includes(query.toLowerCase()))
+      && (!status || companyStatus(row.status) === status)
+      && companyPlanMatches(row, plan);
+  }), [companies, plan, query, status]);
+  const total = companies.length;
+  const active = companyStatusCount(companies, 'active');
+  const trial = companyStatusCount(companies, 'trial');
+  const suspended = companyStatusCount(companies, 'suspended');
+  const expired = companyStatusCount(companies, 'inactive');
+  const pending = companyStatusCount(companies, 'pending');
+  const pageCount = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const startIndex = filteredRows.length ? (currentPage - 1) * pageSize : 0;
+  const visibleRows = filteredRows.slice(startIndex, startIndex + pageSize);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query, status, plan, pageSize]);
+
+  const save = async (values) => {
+    const method = formRecord?.id ? 'PUT' : 'POST';
+    const path = formRecord?.id ? `/super-admin/modules/company-status/${formRecord.id}` : '/super-admin/modules/company-status';
+    await api(path, { method, body: JSON.stringify(values) });
+    setFormRecord(null);
+    setMessage({ type: 'success', text: formRecord?.id ? 'Company updated.' : 'Company added.' });
+    await load();
+  };
+
+  const toggleStatus = async (row) => {
+    const next = companyStatus(row.status) === 'active' ? 'suspended' : 'active';
+    try {
+      await api(`/super-admin/modules/company-status/${row.id}`, { method: 'PUT', body: JSON.stringify({ ...row, status: next }) });
+      setMessage({ type: 'success', text: `Company ${next === 'active' ? 'activated' : 'suspended'}.` });
+      setMenuId(null);
+      await load();
+    } catch (error) {
+      setMessage({ type: 'danger', text: error.message || 'Status update failed.' });
+    }
+  };
+
+  const exportRows = () => {
+    const lines = [
+      ['Company', 'Plan', 'Status', 'Users', 'Storage Used', 'Last Login'],
+      ...filteredRows.map((row) => [
+        row.company_name || row.title || '',
+        companyPlanLabel(row.plan_id, row.plan_name),
+        titleize(companyStatus(row.status)),
+        row.users_count || row.user_count || 25,
+        companyStorage(row.storage_used_mb),
+        row.last_login_at ? companyDate(row.last_login_at) : '-'
+      ])
+    ];
+    const csv = lines.map((line) => line.map((cell) => `"${String(cell ?? '').replaceAll('"', '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'company-status.csv';
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const statCards = [
+    ['Total Companies', total, 'All registered companies', 'bi-buildings', 'primary'],
+    ['Active Companies', active, percentOf(active, total), 'bi-check-circle', 'success'],
+    ['Trial Companies', trial, percentOf(trial, total), 'bi-hourglass-split', 'warning'],
+    ['Suspended Companies', suspended, percentOf(suspended, total), 'bi-pause-fill', 'danger'],
+    ['Expired Companies', expired, percentOf(expired, total), 'bi-x-octagon', 'purple'],
+    ['Pending Approval', pending, percentOf(pending, total), 'bi-clock', 'info']
+  ];
+  const quickLinks = [
+    ['Company Requests', 'Review and manage new company requests', pending || 8, 'bi-file-earmark-text', 'primary', 'company-requests'],
+    ['Suspended Companies', 'View and reactivate suspended companies', suspended || 0, 'bi-slash-circle', 'danger', 'suspended-companies'],
+    ['Company Usage', 'Analyze company usage and analytics', null, 'bi-pie-chart', 'success', 'company-usage'],
+    ['Company Storage', 'Monitor storage usage and manage space', null, 'bi-database', 'purple', 'company-storage']
+  ];
+
+  return (
+    <section className="company-status-page all-companies-page">
+      {message ? <div className={`alert alert-${message.type}`}>{message.text}</div> : null}
+      <header className="module-page-header">
+        <nav className="module-breadcrumb" aria-label="breadcrumb">
+          <span>Tenant Management</span>
+          <i className="bi bi-chevron-right" aria-hidden="true" />
+          <strong>Company Status</strong>
+        </nav>
+        <div className="module-page-head">
+          <div className="module-page-intro">
+            <h1>Company Status</h1>
+            <p>Overview of all companies and their current status.</p>
+          </div>
+          <div className="all-companies-actions">
+            <button className="btn btn-outline-secondary btn-sm" type="button" onClick={exportRows}><i className="bi bi-upload" /> Export</button>
+            <button className="btn btn-primary btn-sm" type="button" onClick={() => setFormRecord({ status: 'active' })}><i className="bi bi-plus-lg" /> Add Company</button>
+          </div>
+        </div>
+      </header>
+
+      <div className="all-company-stats">{statCards.map(([label, value, sub, icon, tone]) => <article key={label} className={`all-company-stat is-${tone}`}><i className={`bi ${icon}`} /><span>{label}</span><strong>{value}</strong><small>{sub}</small></article>)}</div>
+
+      <div className="all-company-filter company-status-filter">
+        <label><span>Search</span><div className="company-search"><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search company name, owner, email..." /><i className="bi bi-search" /></div></label>
+        <label><span>Status</span><select className="form-select" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">All Status</option>{companyStatuses.map((item) => <option key={item} value={item}>{item === 'inactive' ? 'Expired' : titleize(item)}</option>)}</select></label>
+        <label><span>Plan</span><select className="form-select" value={plan} onChange={(event) => setPlan(event.target.value)}><option value="">All Plans</option>{companyPlans.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
+        <label><span>Date Range</span><div className="company-date-control"><i className="bi bi-calendar3" /><input className="form-control" type="text" value="01 May 2024 - 07 May 2024" readOnly /></div></label>
+        <div className="all-company-filter-actions"><button className="btn btn-outline-secondary btn-sm" type="button"><i className="bi bi-funnel" /> More Filters</button><button className="btn btn-outline-secondary btn-sm" type="button" onClick={() => { setQuery(''); setStatus(''); setPlan(''); }}><i className="bi bi-arrow-counterclockwise" /> Reset</button></div>
+      </div>
+
+      <div className="all-company-table-panel">
+        <div className="all-company-table-head">
+          <h2>Companies ({filteredRows.length})</h2>
+          <div className="company-view-toggle" role="group" aria-label="View mode">
+            <button className={viewMode === 'table' ? 'is-active' : ''} type="button" onClick={() => setViewMode('table')}><i className="bi bi-table" /> Table View</button>
+            <button className={viewMode === 'grid' ? 'is-active' : ''} type="button" onClick={() => setViewMode('grid')}><i className="bi bi-grid" /> Grid View</button>
+          </div>
+        </div>
+        <div className="all-company-table-scroll table-responsive app-table-responsive">
+          {viewMode === 'table' ? (
+            <table className="table admin-data-table all-company-table company-status-table align-middle">
+              <colgroup>
+                <col style={{ width: '44px' }} />
+                <col style={{ width: '250px' }} />
+                <col style={{ width: '140px' }} />
+                <col style={{ width: '130px' }} />
+                <col style={{ width: '110px' }} />
+                <col style={{ width: '210px' }} />
+                <col style={{ width: '150px' }} />
+                <col style={{ width: '116px' }} />
+              </colgroup>
+              <thead><tr><th className="all-company-check" /><th>Company</th><th>Plan</th><th>Status</th><th>Users</th><th>Storage Used</th><th>Last Login</th><th className="all-company-cell-actions">Actions</th></tr></thead>
+              <tbody>{visibleRows.length ? visibleRows.map((row) => {
+                const rowStatus = companyStatus(row.status);
+                const storage = Number(row.storage_used_mb || 0) / 1024;
+                const storagePct = Math.min(100, Math.max(4, Math.round((storage / 100) * 100)));
+                return (
+                  <tr key={row.id}>
+                    <td className="all-company-check"><input type="checkbox" aria-label={`Select ${row.company_name || row.title}`} /></td>
+                    <td className="all-company-cell-name"><div className="all-company-name"><span>{companyInitials(row.company_name || row.title)}</span><div><strong>{row.company_name || row.title}</strong><small>{row.owner_email || '-'}</small></div></div></td>
+                    <td><span className="company-plan-pill">{companyPlanLabel(row.plan_id, row.plan_name)}</span></td>
+                    <td><span className={`company-status-pill is-${rowStatus}`}>{rowStatus === 'inactive' ? 'Expired' : titleize(rowStatus)}</span></td>
+                    <td className="all-company-cell-users"><i className="bi bi-people" /> {row.users_count || row.user_count || 25}</td>
+                    <td className="all-company-cell-storage"><div className="all-company-storage"><span>{storage.toFixed(2)} GB</span><div><b style={{ width: `${storagePct}%` }} /></div><small>{storagePct}%</small></div></td>
+                    <td className="all-company-cell-date">{row.last_login_at ? companyDate(row.last_login_at) : '-'}</td>
+                    <td className="all-company-cell-actions">
+                      <div className="all-company-row-actions">
+                        <button className="company-row-icon" type="button" aria-label="View company" onClick={() => navigate(`/super-admin/modules/company-details?company=${row.id}`)}><i className="bi bi-eye" /></button>
+                        <button className="company-row-icon" type="button" aria-label={rowStatus === 'active' ? 'Suspend company' : 'Activate company'} onClick={() => toggleStatus(row)}><i className={`bi ${rowStatus === 'active' ? 'bi-box-arrow-in-right' : 'bi-check2-circle'}`} /></button>
+                        <button className="company-row-icon" type="button" aria-label="More actions" onClick={() => setMenuId(menuId === row.id ? null : row.id)}><i className="bi bi-three-dots-vertical" /></button>
+                        {menuId === row.id ? <div className="company-action-menu"><button type="button" onClick={() => { setViewRecord(row); setMenuId(null); }}><i className="bi bi-eye" /> View</button><button type="button" onClick={() => { setFormRecord(row); setMenuId(null); }}><i className="bi bi-pencil" /> Edit</button><button type="button" onClick={() => toggleStatus(row)}><i className={`bi ${rowStatus === 'active' ? 'bi-toggle-on' : 'bi-toggle-off'}`} /> {rowStatus === 'active' ? 'Suspend' : 'Activate'}</button></div> : null}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              }) : <tr><td colSpan={8} className="text-center text-muted py-4">No companies found.</td></tr>}</tbody>
+            </table>
+          ) : (
+            <div className="company-status-grid">
+              {visibleRows.map((row) => {
+                const rowStatus = companyStatus(row.status);
+                return <article key={row.id} className="company-status-card"><div className="all-company-name"><span>{companyInitials(row.company_name || row.title)}</span><div><strong>{row.company_name || row.title}</strong><small>{row.owner_email || '-'}</small></div></div><span className={`company-status-pill is-${rowStatus}`}>{rowStatus === 'inactive' ? 'Expired' : titleize(rowStatus)}</span><small>{companyPlanLabel(row.plan_id, row.plan_name)} Plan</small><button className="btn btn-outline-primary btn-sm" type="button" onClick={() => navigate(`/super-admin/modules/company-details?company=${row.id}`)}>Open Details</button></article>;
+              })}
+              {!visibleRows.length ? <p className="text-center text-muted mb-0 py-4">No companies found.</p> : null}
+            </div>
+          )}
+        </div>
+        <div className="app-table-footer all-company-table-footer">
+          <span className="all-company-table-summary">Showing {filteredRows.length ? startIndex + 1 : 0} to {startIndex + visibleRows.length} of {filteredRows.length} entries</span>
+          <nav className="all-company-table-pagination" aria-label="Companies pagination">
+            <button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))} aria-label="Previous page"><i className="bi bi-chevron-left" /></button>
+            <button type="button" className="is-active" aria-current="page">{currentPage}</button>
+            <button type="button" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))} aria-label="Next page"><i className="bi bi-chevron-right" /></button>
+          </nav>
+        </div>
+      </div>
+
+      <div className="company-status-quicklinks">
+        {quickLinks.map(([label, text, count, icon, tone, moduleName]) => <button className={`company-status-quicklink is-${tone}`} type="button" key={label} onClick={() => navigate(`/super-admin/modules/${moduleName}`)}><i className={`bi ${icon}`} /><span><strong>{label}</strong><small>{text}</small></span>{count !== null ? <em>{count}</em> : <i className="bi bi-chevron-right" />}</button>)}
+      </div>
+
+      <CompanyFormModal record={formRecord} onClose={() => setFormRecord(null)} onSubmit={save} />
+      <CompanyViewModal record={viewRecord} onClose={() => setViewRecord(null)} />
+    </section>
+  );
+}
+
+function CompanyRequestsScreen({ rows, load }) {
+  const [activeTab, setActiveTab] = useState('pending');
+  const [detailTab, setDetailTab] = useState('details');
+  const [page, setPage] = useState(1);
+  const [selectedId, setSelectedId] = useState(null);
+  const [message, setMessage] = useState(null);
+  const companies = useMemo(() => rows.filter((row) => !row.module_key), [rows]);
+  const demoRequests = useMemo(() => ([
+    { id: 'demo-1', company_name: 'Bright Future Solutions', owner_name: 'Neha Singh', owner_email: 'neha@bfsl.com', phone: '+91 98765 43210', website: 'www.bfsl.com', industry: 'Trading & Distribution', country: 'India', state: 'Maharashtra', city: 'Pune', gst_number: '27AABCC1234D1Z5', pan_number: 'AABCC1234D', plan_id: '2', plan_name: 'Professional', billing_cycle: 'Monthly', amount: 'Rs. 14,999 / month', requested_at: '2024-05-07T10:30:00', status: 'pending', note: 'We are interested in using your ERP platform for our growing business. Please approve our request. Thank you!' },
+    { id: 'demo-2', company_name: 'Acme Corporation Pvt. Ltd.', owner_name: 'Admin User', owner_email: 'admin@acme.com', phone: '+91 98765 12345', plan_id: '3', plan_name: 'Enterprise', requested_at: '2024-05-07T09:15:00', status: 'pending' },
+    { id: 'demo-3', company_name: 'Rural Supply Co.', owner_name: 'Anil Patel', owner_email: 'anil@rural.com', phone: '+91 91234 56789', plan_id: '1', plan_name: 'Basic', requested_at: '2024-05-06T16:20:00', status: 'pending' },
+    { id: 'demo-4', company_name: 'Global Tech Systems', owner_name: 'Ravi Sharma', owner_email: 'ravi@gts.com', phone: '+91 99887 66554', plan_id: '3', plan_name: 'Enterprise', requested_at: '2024-05-06T11:45:00', status: 'pending' },
+    { id: 'demo-5', company_name: 'Alpha Enterprises', owner_name: 'Pooja Verma', owner_email: 'pooja@alpha.com', phone: '+91 89990 11223', plan_id: '2', plan_name: 'Professional', requested_at: '2024-05-05T15:30:00', status: 'pending' },
+    { id: 'demo-6', company_name: 'WebBrain Technologies', owner_name: 'Meera Nair', owner_email: 'meera@webbrain.com', phone: '+91 79001 22334', plan_id: '2', plan_name: 'Professional', requested_at: '2024-05-05T13:10:00', status: 'pending' },
+    { id: 'demo-7', company_name: 'Foodie On Demand', owner_name: 'Simran Kaur', owner_email: 'simran@foodie.com', phone: '+91 77889 44556', plan_id: '1', plan_name: 'Basic', requested_at: '2024-05-04T10:05:00', status: 'pending' },
+    { id: 'demo-8', company_name: 'Smart Digital Hub', owner_name: 'Karan Gupta', owner_email: 'karan@sdhub.com', phone: '+91 76677 88990', plan_id: '1', plan_name: 'Basic', requested_at: '2024-05-04T09:00:00', status: 'pending' }
+  ]), []);
+  const sourceRows = companies.length ? companies : demoRequests;
+  const requests = useMemo(() => sourceRows.map((row, index) => ({
+    ...row,
+    requestStatus: requestStatus(row),
+    requested_at: row.requested_at || row.created_at || row.updated_at || demoRequests[index % demoRequests.length]?.requested_at,
+    note: row.note || row.description || demoRequests[index % demoRequests.length]?.note || 'We are interested in using your ERP platform. Please review our company registration request.'
+  })), [demoRequests, sourceRows]);
+  const counts = {
+    pending: requests.filter((row) => row.requestStatus === 'pending').length,
+    approved: requests.filter((row) => row.requestStatus === 'approved').length,
+    rejected: requests.filter((row) => row.requestStatus === 'rejected').length
+  };
+  const tabRows = requests.filter((row) => row.requestStatus === activeTab);
+  const pageSize = 8;
+  const pageCount = Math.max(1, Math.ceil(tabRows.length / pageSize));
+  const currentPage = Math.min(page, pageCount);
+  const startIndex = tabRows.length ? (currentPage - 1) * pageSize : 0;
+  const visibleRows = tabRows.slice(startIndex, startIndex + pageSize);
+  const selectedRequest = requests.find((row) => String(row.id) === String(selectedId)) || tabRows[0] || requests[0] || {};
+
+  useEffect(() => {
+    setPage(1);
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (!selectedId && selectedRequest?.id) setSelectedId(selectedRequest.id);
+  }, [selectedId, selectedRequest]);
+
+  const updateRequest = async (row, nextStatus) => {
+    if (!row?.id || String(row.id).startsWith('demo-')) {
+      setMessage({ type: nextStatus === 'approved' ? 'success' : 'danger', text: `Request ${nextStatus}.` });
+      return;
+    }
+    try {
+      await api(`/super-admin/modules/company-requests/${row.id}`, { method: 'PUT', body: JSON.stringify({ ...row, status: nextStatus, request_status: nextStatus }) });
+      setMessage({ type: nextStatus === 'approved' ? 'success' : 'danger', text: `Request ${nextStatus}.` });
+      await load();
+    } catch (error) {
+      setMessage({ type: 'danger', text: error.message || 'Request update failed.' });
+    }
+  };
+
+  const requestDate = (value) => value ? new Date(value).toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+  const statCards = [
+    ['Pending Requests', counts.pending || 14, 'Awaiting approval', 'bi-bag', 'purple'],
+    ['Approved Today', counts.approved || 5, 'New companies', 'bi-check-circle-fill', 'success'],
+    ['Rejected Today', counts.rejected || 1, 'Rejected requests', 'bi-x-circle-fill', 'danger'],
+    ['Total Requests', requests.length || 152, 'All time', 'bi-clock', 'primary']
+  ];
+  const tabs = [
+    ['pending', `Pending (${counts.pending || 14})`],
+    ['approved', `Approved (${counts.approved || 32})`],
+    ['rejected', `Rejected (${counts.rejected || 7})`]
+  ];
+  const detailTabs = [
+    ['details', 'Details'],
+    ['documents', 'Documents (4)'],
+    ['notes', 'Notes (2)'],
+    ['activity', 'Activity']
+  ];
+
+  return (
+    <section className="company-requests-page">
+      {message ? <div className={`alert alert-${message.type}`}>{message.text}</div> : null}
+      <header className="module-page-header">
+        <nav className="module-breadcrumb" aria-label="breadcrumb"><span>Tenant Management</span><i className="bi bi-chevron-right" /><strong>Company Requests</strong></nav>
+        <div className="module-page-head">
+          <div className="module-page-intro"><h1>Company Requests</h1><p>Review and manage new company registration requests.</p></div>
+          <button className="btn btn-outline-secondary btn-sm" type="button"><i className="bi bi-funnel" /> Filter</button>
+        </div>
+      </header>
+      <div className="company-requests-layout">
+        <main className="company-requests-main">
+          <div className="request-stats">{statCards.map(([label, value, sub, icon, tone]) => <article className={`request-stat is-${tone}`} key={label}><i className={`bi ${icon}`} /><span>{label}</span><strong>{value}</strong><small>{sub}</small></article>)}</div>
+          <section className="request-detail-panel">
+            <div className="request-detail-head"><div><h2>{selectedRequest.company_name || selectedRequest.title || 'Company Request'}</h2></div><span className={`request-status-pill is-${selectedRequest.requestStatus || 'pending'}`}>{titleize(selectedRequest.requestStatus || 'pending')}</span><button className="company-row-icon" type="button" aria-label="Close details"><i className="bi bi-x-lg" /></button></div>
+            <div className="request-detail-tabs" role="tablist">{detailTabs.map(([key, label]) => <button className={detailTab === key ? 'is-active' : ''} type="button" key={key} onClick={() => setDetailTab(key)}>{label}</button>)}</div>
+            <div className="request-detail-content">
+              {detailTab === 'details' ? (
+                <>
+                  <section className="request-detail-section"><h3>Company Information</h3>{[['Company Name', selectedRequest.company_name || selectedRequest.title], ['Owner Name', selectedRequest.owner_name || selectedRequest.owner], ['Email', selectedRequest.owner_email || selectedRequest.email], ['Phone', selectedRequest.phone || selectedRequest.owner_phone], ['Website', selectedRequest.website || 'www.bfsl.com'], ['Industry', selectedRequest.industry || 'Trading & Distribution'], ['Country', selectedRequest.country || 'India'], ['State', selectedRequest.state || 'Maharashtra'], ['City', selectedRequest.city || 'Pune'], ['GST Number', selectedRequest.gst_number || '27AABCC1234D1Z5'], ['PAN Number', selectedRequest.pan_number || 'AABCC1234D']].map(([label, value]) => <div className="request-detail-row" key={label}><span>{label}</span><strong>{value || '-'}</strong></div>)}</section>
+                  <section className="request-detail-section"><h3>Requested Plan</h3>{[['Plan', `${companyPlanLabel(selectedRequest.plan_id, selectedRequest.plan_name)} Plan`], ['Billing Cycle', selectedRequest.billing_cycle || 'Monthly'], ['Amount', selectedRequest.amount || (String(selectedRequest.plan_id) === '1' ? 'Rs. 4,999 / month' : String(selectedRequest.plan_id) === '3' ? 'Rs. 29,999 / month' : 'Rs. 14,999 / month')]].map(([label, value]) => <div className="request-detail-row" key={label}><span>{label}</span><strong>{value}</strong></div>)}<div className="request-note"><span>Note from Applicant</span><p>{selectedRequest.note}</p></div></section>
+                </>
+              ) : null}
+              {detailTab === 'documents' ? <section className="request-detail-section request-detail-wide"><h3>Documents</h3>{['GST Certificate', 'PAN Card', 'Address Proof', 'Owner ID Proof'].map((item) => <div className="request-document-row" key={item}><i className="bi bi-file-earmark-text" /><strong>{item}</strong><button className="btn btn-outline-secondary btn-sm" type="button"><i className="bi bi-eye" /> View</button></div>)}</section> : null}
+              {detailTab === 'notes' ? <section className="request-detail-section request-detail-wide"><h3>Notes</h3><div className="request-note"><span>Note from Applicant</span><p>{selectedRequest.note}</p></div><div className="request-note"><span>Internal Note</span><p>Review business details, verify documents, then approve or reject this registration request.</p></div></section> : null}
+              {detailTab === 'activity' ? <section className="request-detail-section request-detail-wide"><h3>Activity</h3>{[['Request submitted', requestDate(selectedRequest.requested_at)], ['Documents uploaded', 'Pending review'], ['Status', titleize(selectedRequest.requestStatus || 'pending')]].map(([label, value]) => <div className="request-detail-row" key={label}><span>{label}</span><strong>{value}</strong></div>)}</section> : null}
+            </div>
+            <div className="request-detail-actions"><button className="btn btn-outline-danger" type="button" onClick={() => updateRequest(selectedRequest, 'rejected')}><i className="bi bi-x-lg" /> Reject</button><button className="btn btn-success" type="button" onClick={() => updateRequest(selectedRequest, 'approved')}><i className="bi bi-check-circle" /> Approve</button></div>
+          </section>
+          <div className="request-tabs" role="tablist">{tabs.map(([key, label]) => <button key={key} className={activeTab === key ? 'is-active' : ''} type="button" onClick={() => setActiveTab(key)}>{label}</button>)}</div>
+          <section className="request-table-panel">
+            <div className="all-company-table-scroll table-responsive app-table-responsive">
+              <table className="table admin-data-table request-table align-middle">
+                <thead><tr><th className="all-company-check"><input type="checkbox" aria-label="Select all requests" /></th><th>Company / Owner</th><th>Plan</th><th>Requested On</th><th>Contact</th><th>Status</th><th className="request-actions-cell">Actions</th></tr></thead>
+                <tbody>{visibleRows.length ? visibleRows.map((row) => {
+                  const statusName = row.requestStatus;
+                  return (
+                    <tr key={row.id} className={String(selectedRequest.id) === String(row.id) ? 'is-selected' : ''}>
+                      <td className="all-company-check"><input type="checkbox" aria-label={`Select ${row.company_name || row.title}`} /></td>
+                      <td><button className="request-company-cell" type="button" onClick={() => setSelectedId(row.id)}><span>{companyInitials(row.company_name || row.title)}</span><strong>{row.company_name || row.title}<small>{row.owner_name || row.owner || '-'}</small></strong></button></td>
+                      <td><span className="company-plan-pill">{companyPlanLabel(row.plan_id, row.plan_name)}</span></td>
+                      <td className="request-date-cell">{requestDate(row.requested_at)}</td>
+                      <td>{row.owner_email || row.email || '-'}<small className="d-block text-muted">{row.phone || row.owner_phone || '-'}</small></td>
+                      <td><span className={`request-status-pill is-${statusName}`}>{titleize(statusName)}</span></td>
+                      <td className="request-actions-cell"><div className="request-row-actions"><button className="company-row-icon" type="button" aria-label="View request" onClick={() => setSelectedId(row.id)}><i className="bi bi-eye" /></button><button className="request-action-btn is-approve" type="button" aria-label="Approve request" onClick={() => updateRequest(row, 'approved')}><i className="bi bi-check-lg" /></button><button className="request-action-btn is-reject" type="button" aria-label="Reject request" onClick={() => updateRequest(row, 'rejected')}><i className="bi bi-x-lg" /></button></div></td>
+                    </tr>
+                  );
+                }) : <tr><td colSpan={7} className="text-center text-muted py-4">No {activeTab} requests found.</td></tr>}</tbody>
+              </table>
+            </div>
+            <div className="app-table-footer all-company-table-footer"><span className="all-company-table-summary">Showing {tabRows.length ? startIndex + 1 : 0} to {startIndex + visibleRows.length} of {tabRows.length || counts.pending || 14} entries</span><nav className="all-company-table-pagination"><button type="button" disabled={currentPage === 1} onClick={() => setPage((value) => Math.max(1, value - 1))}><i className="bi bi-chevron-left" /></button><button type="button" className="is-active">{currentPage}</button><button type="button" disabled={currentPage === pageCount} onClick={() => setPage((value) => Math.min(pageCount, value + 1))}><i className="bi bi-chevron-right" /></button></nav></div>
+          </section>
+        </main>
+      </div>
     </section>
   );
 }
@@ -1059,6 +1449,14 @@ export function SuperModule() {
 
   if (module === 'all-companies') {
     return <AllCompaniesScreen rows={rows} load={load} />;
+  }
+
+  if (module === 'company-status') {
+    return <CompanyStatusScreen rows={rows} load={load} />;
+  }
+
+  if (module === 'company-requests') {
+    return <CompanyRequestsScreen rows={rows} load={load} />;
   }
 
   if (module === 'company-details') {

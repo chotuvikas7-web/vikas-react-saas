@@ -1,0 +1,252 @@
+- generic [ref=e15]:
+  - complementary [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: VE
+      - generic [ref=e19]:
+        - strong [ref=e20]: Vikas ERP
+        - generic [ref=e21]: Super Admin
+    - navigation [ref=e22]:
+      - link " Dashboard" [active] [ref=e23] [cursor=pointer]:
+        - /url: /super-admin
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Dashboard
+      - generic [ref=e26]:
+        - button " Email " [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: 
+            - text: Email
+          - generic [ref=e30]: 
+        - text: 
+      - generic [ref=e31]:
+        - button " Tenant Management " [ref=e32] [cursor=pointer]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: 
+            - text: Tenant Management
+          - generic [ref=e35]: 
+        - text:        
+      - generic [ref=e36]:
+        - button " Subscriptions " [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: 
+            - text: Subscriptions
+          - generic [ref=e40]: 
+        - text:       
+      - generic [ref=e41]:
+        - button " Plans & Features " [ref=e42] [cursor=pointer]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: 
+            - text: Plans & Features
+          - generic [ref=e45]: 
+        - text:           
+      - generic [ref=e46]:
+        - button " Users " [ref=e47] [cursor=pointer]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: 
+            - text: Users
+          - generic [ref=e50]: 
+        - text:        
+      - generic [ref=e51]:
+        - button " Renewals & Billings " [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: 
+            - text: Renewals & Billings
+          - generic [ref=e55]: 
+        - text:      
+      - generic [ref=e56]:
+        - button " Support Center " [ref=e57] [cursor=pointer]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: 
+            - text: Support Center
+          - generic [ref=e60]: 
+        - text:      
+      - generic [ref=e61]:
+        - button " Vendor Management " [ref=e62] [cursor=pointer]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: 
+            - text: Vendor Management
+          - generic [ref=e65]: 
+        - text:      
+      - generic [ref=e66]:
+        - button " Integration " [ref=e67] [cursor=pointer]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: 
+            - text: Integration
+          - generic [ref=e70]: 
+        - text:          
+      - generic [ref=e71]:
+        - button " Reports & Analytics " [ref=e72] [cursor=pointer]:
+          - generic [ref=e73]:
+            - generic [ref=e74]: 
+            - text: Reports & Analytics
+          - generic [ref=e75]: 
+        - text:       
+      - generic [ref=e76]:
+        - button " Security " [ref=e77] [cursor=pointer]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: 
+            - text: Security
+          - generic [ref=e80]: 
+        - text:        
+      - generic [ref=e81]:
+        - button " System Settings " [ref=e82] [cursor=pointer]:
+          - generic [ref=e83]:
+            - generic [ref=e84]: 
+            - text: System Settings
+          - generic [ref=e85]: 
+        - text:        
+      - generic [ref=e86]:
+        - button " Maintenance " [ref=e87] [cursor=pointer]:
+          - generic [ref=e88]:
+            - generic [ref=e89]: 
+            - text: Maintenance
+          - generic [ref=e90]: 
+        - text:        
+      - button " Logout" [ref=e91] [cursor=pointer]:
+        - generic [ref=e92]: 
+        - generic [ref=e93]: Logout
+  - main [ref=e94]:
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - text: 
+        - button "" [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]: 
+        - generic [ref=e99] [cursor=pointer]:
+          - generic [ref=e100]: 
+          - generic [ref=e101]: Search tenants, billing, tickets...
+          - generic [ref=e102]: Ctrl K
+      - generic [ref=e103]:
+        - button "" [ref=e104] [cursor=pointer]:
+          - generic [ref=e105]: 
+        - button "" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: 
+        - button "S Super Admin " [ref=e109] [cursor=pointer]:
+          - generic [ref=e110]: S
+          - strong [ref=e111]: Super Admin
+          - generic [ref=e112]: 
+    - generic [ref=e558]:
+      - navigation "breadcrumb" [ref=e559]:
+        - list [ref=e560]:
+          - listitem [ref=e561]: Super Admin
+          - listitem [ref=e562]: / Dashboard
+      - heading "Dashboard" [level=1] [ref=e563]
+    - generic [ref=e564]:
+      - generic [ref=e566]:
+        - generic [ref=e567]:
+          - heading "Revenue Chart" [level=2] [ref=e568]
+          - text: Monthly platform revenue
+        - img [ref=e570]
+      - generic [ref=e572]:
+        - generic [ref=e573]:
+          - heading "Subscription Breakdown" [level=2] [ref=e574]
+          - text: Plan distribution
+        - img [ref=e576]
+      - generic [ref=e578]:
+        - generic [ref=e579]:
+          - heading "Company Growth" [level=2] [ref=e580]
+          - text: Tenant acquisition
+        - img [ref=e582]
+      - generic [ref=e584]:
+        - generic [ref=e585]:
+          - heading "User Growth" [level=2] [ref=e586]
+          - text: Users across all tenants
+        - img [ref=e588]
+      - generic [ref=e590]:
+        - generic [ref=e591]:
+          - heading "Support Ticket Status" [level=2] [ref=e592]
+          - text: Open, pending and resolved tickets
+        - img [ref=e594]
+      - generic [ref=e596]:
+        - generic [ref=e597]:
+          - heading "Churn Rate" [level=2] [ref=e598]
+          - text: Monthly customer churn trend
+        - img [ref=e600]
+    - generic [ref=e601]:
+      - generic [ref=e602]:
+        - generic [ref=e603]:
+          - heading "Recent Companies" [level=2] [ref=e604]
+          - text: Latest tenant accounts
+        - link "Add Company" [ref=e605] [cursor=pointer]:
+          - /url: /super-admin/modules/company-details
+      - table [ref=e607]:
+        - rowgroup [ref=e608]:
+          - row "Company Slug Database Owner Status Action" [ref=e609]:
+            - columnheader "Company" [ref=e610]
+            - columnheader "Slug" [ref=e611]
+            - columnheader "Database" [ref=e612]
+            - columnheader "Owner" [ref=e613]
+            - columnheader "Status" [ref=e614]
+            - columnheader "Action" [ref=e615]
+        - rowgroup [ref=e616]:
+          - row "No companies yet." [ref=e617]:
+            - cell "No companies yet." [ref=e618]
+    - generic [ref=e619]:
+      - generic [ref=e621]:
+        - generic [ref=e622]:
+          - heading "Recent Payments" [level=2] [ref=e623]
+          - text: Latest platform activity
+        - table [ref=e625]:
+          - rowgroup [ref=e626]:
+            - row "Company Reference Status / Date Created" [ref=e627]:
+              - columnheader "Company" [ref=e628]
+              - columnheader "Reference" [ref=e629]
+              - columnheader "Status / Date" [ref=e630]
+              - columnheader "Created" [ref=e631]
+          - rowgroup [ref=e632]:
+            - row "No records yet." [ref=e633]:
+              - cell "No records yet." [ref=e634]
+      - generic [ref=e636]:
+        - generic [ref=e637]:
+          - heading "Recent Support Tickets" [level=2] [ref=e638]
+          - text: Latest platform activity
+        - table [ref=e640]:
+          - rowgroup [ref=e641]:
+            - row "Company Reference Status / Date Created" [ref=e642]:
+              - columnheader "Company" [ref=e643]
+              - columnheader "Reference" [ref=e644]
+              - columnheader "Status / Date" [ref=e645]
+              - columnheader "Created" [ref=e646]
+          - rowgroup [ref=e647]:
+            - row "No records yet." [ref=e648]:
+              - cell "No records yet." [ref=e649]
+      - generic [ref=e651]:
+        - generic [ref=e652]:
+          - heading "Expiring Subscriptions" [level=2] [ref=e653]
+          - text: Latest platform activity
+        - table [ref=e655]:
+          - rowgroup [ref=e656]:
+            - row "Company Reference Status / Date Created" [ref=e657]:
+              - columnheader "Company" [ref=e658]
+              - columnheader "Reference" [ref=e659]
+              - columnheader "Status / Date" [ref=e660]
+              - columnheader "Created" [ref=e661]
+          - rowgroup [ref=e662]:
+            - row "No records yet." [ref=e663]:
+              - cell "No records yet." [ref=e664]
+      - generic [ref=e666]:
+        - generic [ref=e667]:
+          - heading "Failed Payments" [level=2] [ref=e668]
+          - text: Latest platform activity
+        - table [ref=e670]:
+          - rowgroup [ref=e671]:
+            - row "Company Reference Status / Date Created" [ref=e672]:
+              - columnheader "Company" [ref=e673]
+              - columnheader "Reference" [ref=e674]
+              - columnheader "Status / Date" [ref=e675]
+              - columnheader "Created" [ref=e676]
+          - rowgroup [ref=e677]:
+            - row "No records yet." [ref=e678]:
+              - cell "No records yet." [ref=e679]
+      - generic [ref=e681]:
+        - generic [ref=e682]:
+          - heading "Recent Login Activity" [level=2] [ref=e683]
+          - text: Admin and tenant login signals
+        - generic [ref=e684]:
+          - generic [ref=e685]: 
+          - generic [ref=e686]: Login logs are available under Security & Compliance.
+      - generic [ref=e688]:
+        - generic [ref=e689]:
+          - heading "System Alerts" [level=2] [ref=e690]
+          - text: Infrastructure and maintenance status
+        - generic [ref=e691]:
+          - generic [ref=e692]: 
+          - generic [ref=e693]: No critical alerts. Queue, cron and backup monitors are in Maintenance.

@@ -1,0 +1,407 @@
+- generic [ref=e15]:
+  - complementary [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e18]: VE
+      - generic [ref=e19]:
+        - strong [ref=e20]: Vikas ERP
+        - generic [ref=e21]: Super Admin
+    - navigation [ref=e22]:
+      - link " Dashboard" [ref=e23] [cursor=pointer]:
+        - /url: /super-admin
+        - generic [ref=e24]: 
+        - generic [ref=e25]: Dashboard
+      - generic [ref=e26]:
+        - button " Email " [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: 
+            - text: Email
+          - generic [ref=e30]: 
+        - text: 
+      - generic [ref=e31]:
+        - button " Tenant Management " [ref=e32] [cursor=pointer]:
+          - generic [ref=e33]:
+            - generic [ref=e34]: 
+            - text: Tenant Management
+          - generic [ref=e35]: 
+        - text:        
+      - generic [ref=e36]:
+        - button " Subscriptions " [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: 
+            - text: Subscriptions
+          - generic [ref=e40]: 
+        - text:       
+      - generic [ref=e41]:
+        - button " Plans & Features " [ref=e42] [cursor=pointer]:
+          - generic [ref=e43]:
+            - generic [ref=e44]: 
+            - text: Plans & Features
+          - generic [ref=e45]: 
+        - text:           
+      - generic [ref=e46]:
+        - button " Users " [ref=e47] [cursor=pointer]:
+          - generic [ref=e48]:
+            - generic [ref=e49]: 
+            - text: Users
+          - generic [ref=e50]: 
+        - text:        
+      - generic [ref=e51]:
+        - button " Renewals & Billings " [ref=e52] [cursor=pointer]:
+          - generic [ref=e53]:
+            - generic [ref=e54]: 
+            - text: Renewals & Billings
+          - generic [ref=e55]: 
+        - text:      
+      - generic [ref=e56]:
+        - button " Support Center " [ref=e57] [cursor=pointer]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: 
+            - text: Support Center
+          - generic [ref=e60]: 
+        - text:      
+      - generic [ref=e61]:
+        - button " Vendor Management " [ref=e62] [cursor=pointer]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: 
+            - text: Vendor Management
+          - generic [ref=e65]: 
+        - text:      
+      - generic [ref=e66]:
+        - button " Integration " [ref=e67] [cursor=pointer]:
+          - generic [ref=e68]:
+            - generic [ref=e69]: 
+            - text: Integration
+          - generic [ref=e70]: 
+        - text:          
+      - generic [ref=e71]:
+        - button " Reports & Analytics " [ref=e72] [cursor=pointer]:
+          - generic [ref=e73]:
+            - generic [ref=e74]: 
+            - text: Reports & Analytics
+          - generic [ref=e75]: 
+        - text:       
+      - generic [ref=e76]:
+        - button " Security " [ref=e77] [cursor=pointer]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: 
+            - text: Security
+          - generic [ref=e80]: 
+        - text:        
+      - generic [ref=e81]:
+        - button " System Settings " [ref=e82] [cursor=pointer]:
+          - generic [ref=e83]:
+            - generic [ref=e84]: 
+            - text: System Settings
+          - generic [ref=e85]: 
+        - text:        
+      - generic [ref=e86]:
+        - button " Maintenance " [ref=e87] [cursor=pointer]:
+          - generic [ref=e88]:
+            - generic [ref=e89]: 
+            - text: Maintenance
+          - generic [ref=e90]: 
+        - text:        
+      - button " Logout" [ref=e91] [cursor=pointer]:
+        - generic [ref=e92]: 
+        - generic [ref=e93]: Logout
+  - main [ref=e94]:
+    - generic [ref=e95]:
+      - generic [ref=e96]:
+        - text: 
+        - button "" [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]: 
+        - generic [ref=e99] [cursor=pointer]:
+          - generic [ref=e100]: 
+          - generic [ref=e101]: Search tenants, billing, tickets...
+          - generic [ref=e102]: Ctrl K
+      - generic [ref=e103]:
+        - button "" [ref=e104] [cursor=pointer]:
+          - generic [ref=e105]: 
+        - button "" [ref=e106] [cursor=pointer]:
+          - generic [ref=e107]: 
+        - button "S Super Admin " [ref=e109] [cursor=pointer]:
+          - generic [ref=e110]: S
+          - strong [ref=e111]: Super Admin
+          - generic [ref=e112]: 
+    - generic [ref=e113]:
+      - navigation "breadcrumb" [ref=e114]:
+        - list [ref=e115]:
+          - listitem [ref=e116]: Super Admin
+          - listitem [ref=e117]: / Dashboard
+      - heading "Dashboard" [level=1] [ref=e118]
+    - generic [ref=e119]:
+      - generic [ref=e120]:
+        - generic [ref=e122]: 
+        - generic [ref=e123]: Total Companies
+        - strong [ref=e124]: "5"
+      - generic [ref=e125]:
+        - generic [ref=e127]: 
+        - generic [ref=e128]: Active Companies
+        - strong [ref=e129]: "3"
+      - generic [ref=e130]:
+        - generic [ref=e132]: 
+        - generic [ref=e133]: Inactive Companies
+        - strong [ref=e134]: "0"
+      - generic [ref=e135]:
+        - generic [ref=e137]: 
+        - generic [ref=e138]: Trial Companies
+        - strong [ref=e139]: "1"
+      - generic [ref=e140]:
+        - generic [ref=e142]: 
+        - generic [ref=e143]: Suspended Companies
+        - strong [ref=e144]: "1"
+      - generic [ref=e145]:
+        - generic [ref=e147]: 
+        - generic [ref=e148]: Total Users
+        - strong [ref=e149]: "5"
+      - generic [ref=e150]:
+        - generic [ref=e152]: 
+        - generic [ref=e153]: Active Users
+        - strong [ref=e154]: "5"
+      - generic [ref=e155]:
+        - generic [ref=e157]: 
+        - generic [ref=e158]: Monthly Revenue
+        - strong [ref=e159]: ₹0
+      - generic [ref=e160]:
+        - generic [ref=e162]: 
+        - generic [ref=e163]: Annual Revenue
+        - strong [ref=e164]: ₹24,990
+      - generic [ref=e165]:
+        - generic [ref=e167]: 
+        - generic [ref=e168]: Pending Payments
+        - strong [ref=e169]: "1"
+      - generic [ref=e170]:
+        - generic [ref=e172]: 
+        - generic [ref=e173]: Renewals
+        - strong [ref=e174]: "1"
+      - generic [ref=e175]:
+        - generic [ref=e177]: 
+        - generic [ref=e178]: Expiring Plans
+        - strong [ref=e179]: "0"
+      - generic [ref=e180]:
+        - generic [ref=e182]: 
+        - generic [ref=e183]: Open Tickets
+        - strong [ref=e184]: "1"
+      - generic [ref=e185]:
+        - generic [ref=e187]: 
+        - generic [ref=e188]: System Health
+        - strong [ref=e189]: 99.9%
+      - generic [ref=e190]:
+        - generic [ref=e192]: 
+        - generic [ref=e193]: Database Usage
+        - strong [ref=e194]: 17095.8 MB
+      - generic [ref=e195]:
+        - generic [ref=e197]: 
+        - generic [ref=e198]: Storage Usage
+        - strong [ref=e199]: 17095.8 MB
+    - generic [ref=e200]:
+      - generic [ref=e202]:
+        - generic [ref=e203]:
+          - heading "Revenue Chart" [level=2] [ref=e204]
+          - text: Monthly platform revenue
+        - img [ref=e206]
+      - generic [ref=e208]:
+        - generic [ref=e209]:
+          - heading "Subscription Breakdown" [level=2] [ref=e210]
+          - text: Plan distribution
+        - img [ref=e212]
+      - generic [ref=e214]:
+        - generic [ref=e215]:
+          - heading "Company Growth" [level=2] [ref=e216]
+          - text: Tenant acquisition
+        - img [ref=e218]
+      - generic [ref=e220]:
+        - generic [ref=e221]:
+          - heading "User Growth" [level=2] [ref=e222]
+          - text: Users across all tenants
+        - img [ref=e224]
+      - generic [ref=e226]:
+        - generic [ref=e227]:
+          - heading "Support Ticket Status" [level=2] [ref=e228]
+          - text: Open, pending and resolved tickets
+        - img [ref=e230]
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - heading "Churn Rate" [level=2] [ref=e234]
+          - text: Monthly customer churn trend
+        - img [ref=e236]
+    - generic [ref=e237]:
+      - generic [ref=e238]:
+        - generic [ref=e239]:
+          - heading "Recent Companies" [level=2] [ref=e240]
+          - text: Latest tenant accounts
+        - link "Add Company" [ref=e241] [cursor=pointer]:
+          - /url: /super-admin/modules/company-details
+      - table [ref=e243]:
+        - rowgroup [ref=e244]:
+          - row "Company Slug Database Owner Status Action" [ref=e245]:
+            - columnheader "Company" [ref=e246]
+            - columnheader "Slug" [ref=e247]
+            - columnheader "Database" [ref=e248]
+            - columnheader "Owner" [ref=e249]
+            - columnheader "Status" [ref=e250]
+            - columnheader "Action" [ref=e251]
+        - rowgroup [ref=e252]:
+          - row "xyz abc erp_tenant_abc xyz@gmail.com active Login as Admin" [ref=e253]:
+            - cell "xyz" [ref=e254]
+            - cell "abc" [ref=e255]:
+              - code [ref=e256]: abc
+            - cell "erp_tenant_abc" [ref=e257]:
+              - code [ref=e258]: erp_tenant_abc
+            - cell "xyz@gmail.com" [ref=e259]
+            - cell "active" [ref=e260]:
+              - generic [ref=e261]: active
+            - cell "Login as Admin" [ref=e262]:
+              - link "Login as Admin" [ref=e263] [cursor=pointer]:
+                - /url: /admin/login?tenant=abc
+          - row "Rural Supply Suspended rural-supply-suspended erp_tenant_rural_supply_suspended neha@ruralsupply.local suspended Login as Admin" [ref=e264]:
+            - cell "Rural Supply Suspended" [ref=e265]
+            - cell "rural-supply-suspended" [ref=e266]:
+              - code [ref=e267]: rural-supply-suspended
+            - cell "erp_tenant_rural_supply_suspended" [ref=e268]:
+              - code [ref=e269]: erp_tenant_rural_supply_suspended
+            - cell "neha@ruralsupply.local" [ref=e270]
+            - cell "suspended" [ref=e271]:
+              - generic [ref=e272]: suspended
+            - cell "Login as Admin" [ref=e273]:
+              - link "Login as Admin" [ref=e274] [cursor=pointer]:
+                - /url: /admin/login?tenant=rural-supply-suspended
+          - row "Agro Demo ERP agro-demo-erp erp_tenant_agro_demo_erp ravi@agrodemo.local trial Login as Admin" [ref=e275]:
+            - cell "Agro Demo ERP" [ref=e276]
+            - cell "agro-demo-erp" [ref=e277]:
+              - code [ref=e278]: agro-demo-erp
+            - cell "erp_tenant_agro_demo_erp" [ref=e279]:
+              - code [ref=e280]: erp_tenant_agro_demo_erp
+            - cell "ravi@agrodemo.local" [ref=e281]
+            - cell "trial" [ref=e282]:
+              - generic [ref=e283]: trial
+            - cell "Login as Admin" [ref=e284]:
+              - link "Login as Admin" [ref=e285] [cursor=pointer]:
+                - /url: /admin/login?tenant=agro-demo-erp
+          - row "Vikas Child clothes-ecom erp_tenant_clothes_ecom vikas@gmail.com active Login as Admin" [ref=e286]:
+            - cell "Vikas Child" [ref=e287]
+            - cell "clothes-ecom" [ref=e288]:
+              - code [ref=e289]: clothes-ecom
+            - cell "erp_tenant_clothes_ecom" [ref=e290]:
+              - code [ref=e291]: erp_tenant_clothes_ecom
+            - cell "vikas@gmail.com" [ref=e292]
+            - cell "active" [ref=e293]:
+              - generic [ref=e294]: active
+            - cell "Login as Admin" [ref=e295]:
+              - link "Login as Admin" [ref=e296] [cursor=pointer]:
+                - /url: /admin/login?tenant=clothes-ecom
+          - row "Vikas Electronics Manufacture Company vikas-electronics vikas_electronics admin@vikaselectronics.local active Login as Admin" [ref=e297]:
+            - cell "Vikas Electronics Manufacture Company" [ref=e298]
+            - cell "vikas-electronics" [ref=e299]:
+              - code [ref=e300]: vikas-electronics
+            - cell "vikas_electronics" [ref=e301]:
+              - code [ref=e302]: vikas_electronics
+            - cell "admin@vikaselectronics.local" [ref=e303]
+            - cell "active" [ref=e304]:
+              - generic [ref=e305]: active
+            - cell "Login as Admin" [ref=e306]:
+              - link "Login as Admin" [ref=e307] [cursor=pointer]:
+                - /url: /admin/login?tenant=vikas-electronics
+    - generic [ref=e308]:
+      - generic [ref=e310]:
+        - generic [ref=e311]:
+          - heading "Recent Payments" [level=2] [ref=e312]
+          - text: Latest platform activity
+        - table [ref=e314]:
+          - rowgroup [ref=e315]:
+            - row "Company Reference Status / Date Created" [ref=e316]:
+              - columnheader "Company" [ref=e317]
+              - columnheader "Reference" [ref=e318]
+              - columnheader "Status / Date" [ref=e319]
+              - columnheader "Created" [ref=e320]
+          - rowgroup [ref=e321]:
+            - row "Rural Supply Suspended SAAS-INV-2026-003 failed 2026-06-02" [ref=e322]:
+              - cell "Rural Supply Suspended" [ref=e323]
+              - cell "SAAS-INV-2026-003" [ref=e324]
+              - cell "failed" [ref=e325]
+              - cell "2026-06-02" [ref=e326]
+            - row "Agro Demo ERP SAAS-INV-2026-002 pending 2026-06-02" [ref=e327]:
+              - cell "Agro Demo ERP" [ref=e328]
+              - cell "SAAS-INV-2026-002" [ref=e329]
+              - cell "pending" [ref=e330]
+              - cell "2026-06-02" [ref=e331]
+            - row "Vikas Electronics Manufacture Company SAAS-INV-2026-001 paid 2026-06-02" [ref=e332]:
+              - cell "Vikas Electronics Manufacture Company" [ref=e333]
+              - cell "SAAS-INV-2026-001" [ref=e334]
+              - cell "paid" [ref=e335]
+              - cell "2026-06-02" [ref=e336]
+      - generic [ref=e338]:
+        - generic [ref=e339]:
+          - heading "Recent Support Tickets" [level=2] [ref=e340]
+          - text: Latest platform activity
+        - table [ref=e342]:
+          - rowgroup [ref=e343]:
+            - row "Company Reference Status / Date Created" [ref=e344]:
+              - columnheader "Company" [ref=e345]
+              - columnheader "Reference" [ref=e346]
+              - columnheader "Status / Date" [ref=e347]
+              - columnheader "Created" [ref=e348]
+          - rowgroup [ref=e349]:
+            - row "Rural Supply Suspended Reactivate suspended company resolved 2026-06-02" [ref=e350]:
+              - cell "Rural Supply Suspended" [ref=e351]
+              - cell "Reactivate suspended company" [ref=e352]
+              - cell "resolved" [ref=e353]
+              - cell "2026-06-02" [ref=e354]
+            - row "Agro Demo ERP SMTP test mail not sending pending 2026-06-02" [ref=e355]:
+              - cell "Agro Demo ERP" [ref=e356]
+              - cell "SMTP test mail not sending" [ref=e357]
+              - cell "pending" [ref=e358]
+              - cell "2026-06-02" [ref=e359]
+            - row "Vikas Electronics Manufacture Company Invoice download issue open 2026-06-02" [ref=e360]:
+              - cell "Vikas Electronics Manufacture Company" [ref=e361]
+              - cell "Invoice download issue" [ref=e362]
+              - cell "open" [ref=e363]
+              - cell "2026-06-02" [ref=e364]
+      - generic [ref=e366]:
+        - generic [ref=e367]:
+          - heading "Expiring Subscriptions" [level=2] [ref=e368]
+          - text: Latest platform activity
+        - table [ref=e370]:
+          - rowgroup [ref=e371]:
+            - row "Company Reference Status / Date Created" [ref=e372]:
+              - columnheader "Company" [ref=e373]
+              - columnheader "Reference" [ref=e374]
+              - columnheader "Status / Date" [ref=e375]
+              - columnheader "Created" [ref=e376]
+          - rowgroup [ref=e377]:
+            - row "Vikas Child Vikas Child 2026-06-16T18:30:00.000Z 2026-06-01" [ref=e378]:
+              - cell "Vikas Child" [ref=e379]
+              - cell "Vikas Child" [ref=e380]
+              - cell "2026-06-16T18:30:00.000Z" [ref=e381]
+              - cell "2026-06-01" [ref=e382]
+      - generic [ref=e384]:
+        - generic [ref=e385]:
+          - heading "Failed Payments" [level=2] [ref=e386]
+          - text: Latest platform activity
+        - table [ref=e388]:
+          - rowgroup [ref=e389]:
+            - row "Company Reference Status / Date Created" [ref=e390]:
+              - columnheader "Company" [ref=e391]
+              - columnheader "Reference" [ref=e392]
+              - columnheader "Status / Date" [ref=e393]
+              - columnheader "Created" [ref=e394]
+          - rowgroup [ref=e395]:
+            - row "Rural Supply Suspended SAAS-INV-2026-003 failed 2026-06-02" [ref=e396]:
+              - cell "Rural Supply Suspended" [ref=e397]
+              - cell "SAAS-INV-2026-003" [ref=e398]
+              - cell "failed" [ref=e399]
+              - cell "2026-06-02" [ref=e400]
+      - generic [ref=e402]:
+        - generic [ref=e403]:
+          - heading "Recent Login Activity" [level=2] [ref=e404]
+          - text: Admin and tenant login signals
+        - generic [ref=e405]:
+          - generic [ref=e406]: 
+          - generic [ref=e407]: Login logs are available under Security & Compliance.
+      - generic [ref=e409]:
+        - generic [ref=e410]:
+          - heading "System Alerts" [level=2] [ref=e411]
+          - text: Infrastructure and maintenance status
+        - generic [ref=e412]:
+          - generic [ref=e413]: 
+          - generic [ref=e414]: No critical alerts. Queue, cron and backup monitors are in Maintenance.
